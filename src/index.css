@@ -1,0 +1,16 @@
+:root {
+  --primary-color: #FF5733;
+  --secondary-color: #FFC300;
+  --accent-color: #900C3F;
+  --text-color: #333333;
+  --background-color: #FDF3E3;
+  --background-gradient: linear-gradient(135deg, #FF5733, #FFC300);
+  --font-family: 'Poppins', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  background: var(--background-color);
+  color: var(--text-color);
+}
