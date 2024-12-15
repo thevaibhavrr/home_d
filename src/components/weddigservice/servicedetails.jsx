@@ -1,50 +1,8 @@
-// import React from "react";
-// import { useParams } from "react-router-dom";
-// import "../../styles/category.css";
-// import { motion } from "framer-motion";
-// import data from "../../data/products.json"; // Your JSON data file
-
-// function CategoryPage() {
-//   const { category } = useParams();
-//   const products = data[category] || [];
-
-//   return (
-//     <div className="category-page">
-//       <h1 className="category-title">{category.charAt(0).toUpperCase() + category.slice(1)}</h1>
-//       <div className="product-list">
-//         {products.map((product) => (
-//           <motion.div
-//             className="product-card"
-//             key={product.id}
-//             initial={{ opacity: 0, y: 50 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.3 }}
-//           >
-//             <img src={product.image} alt={product.name} className="product-image" />
-//             <div className="product-info">
-//               <h2 className="product-name">{product.name}</h2>
-//               <p className="product-price">₹{product.price}</p>
-//               <div className="product-actions">
-//                 <button className="quantity-btn">-</button>
-//                 <span className="quantity">1</span>
-//                 <button className="quantity-btn">+</button>
-//                 <button className="add-to-cart-btn">Add to Cart</button>
-//               </div>
-//             </div>
-//           </motion.div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default CategoryPage;
-
-
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import "../../styles/category.css";
-import { motion } from "framer-motion";
+import "../../styles/cartpop.css";
+import { motion, AnimatePresence } from "framer-motion";
 import data from "../../data/products.json"; // Your JSON data file
 
 function CategoryPage() {
@@ -64,14 +22,25 @@ function CategoryPage() {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
+  // Calculate total cart value
+  const getTotalCartValue = () => {
+    return Object.values(cart).reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+  };
+
   const addToCart = (product) => {
-    setCart((prevCart) => ({
-      ...prevCart,
-      [product.id]: {
-        ...product,
-        quantity: (prevCart[product.id]?.quantity || 0) + 1,
-      },
-    }));
+    setCart((prevCart) => {
+      const updatedCart = {
+        ...prevCart,
+        [product.id]: {
+          ...product,
+          quantity: (prevCart[product.id]?.quantity || 0) + 1,
+        },
+      };
+      return updatedCart;
+    });
   };
 
   const removeFromCart = (product) => {
@@ -126,9 +95,12 @@ function CategoryPage() {
                     >
                       -
                     </motion.button>
-                    <span className="quantity">
+                    <motion.span
+                      className="quantity"
+                      key={cart[product.id].quantity}
+                    >
                       {cart[product.id].quantity}
-                    </span>
+                    </motion.span>
                     <motion.button
                       className="quantity-btn"
                       whileTap={{ scale: 0.9 }}
@@ -158,9 +130,33 @@ function CategoryPage() {
           </motion.div>
         ))}
       </div>
+
+      {/* Mini Cart Popup */}
+      {Object.keys(cart).length > 0 && (
+        <motion.div
+          className="mini-cart"
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <div className="cart-title-popup" >Cart </div>
+          <ul className="cart-items">
+            {Object.values(cart).map((item) => (
+              <li key={item.id}>
+                {item.name} x {item.quantity} = ₹{item.price * item.quantity}
+              </li>
+            ))}
+          </ul>
+          <div className="cart-footer">
+            <p>Total: ₹{getTotalCartValue()}</p>
+            <Link to={"/cart"} style={{ textDecoration: "none" }} >
+            <button className="buy-now-btn">Buy Now</button>
+            </Link>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }
 
 export default CategoryPage;
-

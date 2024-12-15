@@ -9,7 +9,7 @@
   font-size: 2rem;
   color: var(--primary-color);
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .product-list {
@@ -77,7 +77,6 @@
 }
 
 
-
 .quantity-btn:active,
 .add-to-cart-btn:active,
 .remove-btn:active {
@@ -87,6 +86,9 @@
 .quantity {
   font-size: 1rem;
   color: var(--text-color);
+  font-weight: bold;
+  text-align: center;
+  min-width: 20px;
 }
 
 .remove-btn {
