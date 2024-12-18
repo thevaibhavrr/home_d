@@ -18,7 +18,7 @@
 
 // export default App;
 
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import AllServicesPage from "./components/weddigservice/allservice";
 import CategoryPage from "./components/weddigservice/servicedetails";
 import CartPage from "./components/weddigservice/CartPage"; 
@@ -31,7 +31,7 @@ function App() {
         <Routes>
           <Route path="/" element={<AllServicesPage />} />
           <Route path="/category/:category" element={<CategoryPage />} />
-          <Route path="/cart" element={<CartPage />} /> {/* Add CartPage route */}
+          <Route path="/cart" element={<CartPage />} />
         </Routes>
 
         {/* Conditionally render FooterBar */}

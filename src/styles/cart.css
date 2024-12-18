@@ -139,127 +139,161 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Address Popup - Centered on the Screen */
+
+/* Popup Styling */
 .add-address-popup {
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 30%;
+  left: 40%;
   transform: translate(-50%, -50%);
-  padding: 20px;
+  width: 30%;
   background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
   border-radius: 8px;
-  width: 90%;
-  max-width: 500px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
 }
 
-/* Input Field and Textarea Styling */
-.input-field, textarea {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  font-size: 1rem;
-  border: 1px solid var(--border-color);
+/* Keyframe for fade-in effect */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Background overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  z-index: 999; /* Behind the popup */
+}
+
+/* Input Fields Styling */
+.input-field-for-address {
+  width: 90%;
+  padding: 12px;
+  border: 2px solid black;
   border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
 }
 
-/* Error Message for Mobile Validation */
+.input-field-for-address:focus:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+textarea {
+  height: 120px;
+  resize: none;
+}
+
+/* Error Text Styling */
 .error-text {
-  color: red;
-  font-size: 0.8rem;
-  margin-bottom: 10px;
+  color: #d32f2f;
+  font-size: 0.9rem;
 }
 
-/* Button Styles */
+/* Button Styling */
 .save-address-btn,
 .close-popup-btn {
   padding: 10px 20px;
   color: #fff;
-  background-color: var(--primary-color);
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 10px;
   transition: background-color 0.3s;
 }
 
-.close-popup-btn {
-  background-color: #f44336; /* Red color for close button */
-}
-
-.save-address-btn:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* Disabled Save Button */
-.save-address-btn:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* Style for Cart Page Buttons */
-.remove-item-btn,
-.add-address-btn,
-.save-address-btn,
-.close-popup-btn,
-.checkout-btn {
-  transition: background-color 0.3s;
-}
-
-.remove-item-btn:hover {
-  background-color: var(--error-hover-color);
-}
-
-.add-address-btn:hover {
-  background-color: var(--primary-hover-color);
+.save-address-btn {
+  background-color: var(--primary-color);
 }
 
 .save-address-btn:hover {
   background-color: var(--primary-hover-color);
 }
 
+.close-popup-btn {
+  background-color: #d32f2f;
+}
+
 .close-popup-btn:hover {
-  background-color: #d32f2f; /* Darker red on hover */
+  background-color: #b71c1c;
 }
 
-/* Other Section Styling */
-.address-section,
-.delivery-section {
-  margin-top: 20px;
-}
-
-.section-title {
-  font-size: 1.5rem;
-  color: var(--primary-color);
-  margin-bottom: 10px;
-}
-
-.delivery-charge,
-.total-cart-value {
-  font-size: 1rem;
-  color: var(--text-color);
-}
-
-/* Adjust for Mobile */
+/* Responsive Design for Mobile */
 @media (max-width: 768px) {
-  .cart-page {
-    padding: 10px;
-  }
-
-  .cart-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .cart-item-actions {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   .add-address-popup {
-    width: 95%;
+    width: 90%;
     padding: 15px;
+  }
+
+  .input-field,
+  textarea {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 510px) {
+  .add-address-popup {
+    position: fixed;
+    top: 30%;
+    left: 10%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  /* Keyframe for fade-in effect */
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Background overlay */
+  
+  /* Input Fields Styling */
+  .input-field-for-address {
+    width: 90%;
+    padding: 12px;
+    border: 2px solid black;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+  }
+  
+ 
+  
+  textarea {
+    height: 120px;
+    resize: none;
+  }
+  
+  /* Error Text Styling */
+  .error-text {
+    color: #d32f2f;
+    font-size: 0.9rem;
+  }
+  
+  /* Button Styling */
+  .save-address-btn,
+  .close-popup-btn {
+    padding: 10px 20px;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
   }
 }
