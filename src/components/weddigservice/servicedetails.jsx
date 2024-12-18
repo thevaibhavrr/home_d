@@ -71,25 +71,26 @@
 //       <div className="product-list">
 //         {products.map((product) => (
 //           <motion.div
-//             className="product-card"
-//             key={product.id}
-//             initial={{ opacity: 0, y: 50 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.3 }}
-//           >
-//             <img
-//               src={product.image}
-//               alt={product.name}
-//               className="product-image"
-//             />
-//             <div className="product-info">
-//               <h2 className="product-name">{product.name}</h2>
-//               <p className="product-price">₹{product.price}</p>
-//               <div className="product-actions">
-//                 {cart[product.id] ? (
-//                   <>
+//           className="product-card"
+//           key={product.id}
+//           initial={{ opacity: 0, y: 50 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           transition={{ duration: 0.3 }}
+//         >
+//           <img
+//             src={product.image}
+//             alt={product.name}
+//             className="product-image"
+//           />
+//           <div className="product-info">
+//             <h2 className="product-name">{product.name}</h2>
+//             <p className="product-price">₹{product.price}</p>
+//             <div className="product-actions">
+//               {cart[product.id] ? (
+//                 <>
+//                   <div className="quantity-control">
 //                     <motion.button
-//                       className="quantity-btn"
+//                       className="quantity-btn decrease-btn"
 //                       whileTap={{ scale: 0.9 }}
 //                       onClick={() => removeFromCart(product)}
 //                     >
@@ -98,36 +99,45 @@
 //                     <motion.span
 //                       className="quantity"
 //                       key={cart[product.id].quantity}
+//                       initial={{ opacity: 0 }}
+//                       animate={{ opacity: 1 }}
+//                       transition={{ duration: 0.3 }}
 //                     >
 //                       {cart[product.id].quantity}
 //                     </motion.span>
 //                     <motion.button
-//                       className="quantity-btn"
+//                       className="quantity-btn increase-btn"
 //                       whileTap={{ scale: 0.9 }}
 //                       onClick={() => addToCart(product)}
 //                     >
 //                       +
 //                     </motion.button>
-//                     <motion.button
-//                       className="remove-btn"
-//                       whileTap={{ scale: 0.9 }}
-//                       onClick={() => clearFromCart(product.id)}
-//                     >
-//                       Remove
-//                     </motion.button>
-//                   </>
-//                 ) : (
+//                   </div>
+        
 //                   <motion.button
-//                     className="add-to-cart-btn"
-//                     whileTap={{ scale: 0.95 }}
-//                     onClick={() => addToCart(product)}
+//                     className="remove-btn"
+//                     whileTap={{ scale: 0.9 }}
+//                     onClick={() => clearFromCart(product.id)}
 //                   >
-//                     Add to Cart
+//                     Remove
 //                   </motion.button>
-//                 )}
-//               </div>
+//                 </>
+//               ) : (
+//                 <motion.button
+//                   className="add-to-cart-btn"
+//                   whileTap={{ scale: 0.95 }}
+//                   onClick={() => addToCart(product)}
+//                   initial={{ scale: 0 }}
+//                   animate={{ scale: 1 }}
+//                   transition={{ duration: 0.3 }}
+//                 >
+//                   Add to Cart
+//                 </motion.button>
+//               )}
 //             </div>
-//           </motion.div>
+//           </div>
+//         </motion.div>
+        
 //         ))}
 //       </div>
 
@@ -144,13 +154,26 @@
 //             <div className="cart-title-popup">Cart</div>
 //             <ul className="cart-items">
 //               {Object.values(cart).map((item) => (
-//                 <li key={item.id}>
+//                 <motion.li
+//                   key={item.id}
+//                   initial={{ opacity: 0, y: 10 }}
+//                   animate={{ opacity: 1, y: 0 }}
+//                   exit={{ opacity: 0, y: 10 }}
+//                   transition={{ duration: 0.3 }}
+//                 >
 //                   {item.name} x {item.quantity} = ₹{item.price * item.quantity}
-//                 </li>
+//                 </motion.li>
 //               ))}
 //             </ul>
 //             <div className="cart-footer">
-//               <p>Total: ₹{getTotalCartValue()}</p>
+//               <motion.p
+//                 key={getTotalCartValue()}
+//                 initial={{ opacity: 0 }}
+//                 animate={{ opacity: 1 }}
+//                 transition={{ duration: 0.5 }}
+//               >
+//                 Total: ₹{getTotalCartValue()}
+//               </motion.p>
 //               <Link to={"/cart"} style={{ textDecoration: "none" }}>
 //                 <button className="buy-now-btn">Buy Now</button>
 //               </Link>
@@ -176,17 +199,21 @@ function CategoryPage() {
   const products = data[category] || [];
 
   const [cart, setCart] = useState({});
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Load cart from localStorage on component mount
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || {};
     setCart(storedCart);
+    setIsInitialLoad(false); // Mark the initial load as complete
   }, []);
 
-  // Update localStorage when the cart changes
+  // Update localStorage when the cart changes (but not on the initial load)
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
+    if (!isInitialLoad) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+  }, [cart, isInitialLoad]);
 
   // Calculate total cart value
   const getTotalCartValue = () => {
@@ -237,73 +264,71 @@ function CategoryPage() {
       <div className="product-list">
         {products.map((product) => (
           <motion.div
-          className="product-card"
-          key={product.id}
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <img
-            src={product.image}
-            alt={product.name}
-            className="product-image"
-          />
-          <div className="product-info">
-            <h2 className="product-name">{product.name}</h2>
-            <p className="product-price">₹{product.price}</p>
-            <div className="product-actions">
-              {cart[product.id] ? (
-                <>
-                  <div className="quantity-control">
+            className="product-card"
+            key={product.id}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <img
+              src={product.image}
+              alt={product.name}
+              className="product-image"
+            />
+            <div className="product-info">
+              <h2 className="product-name">{product.name}</h2>
+              <p className="product-price">₹{product.price}</p>
+              <div className="product-actions">
+                {cart[product.id] ? (
+                  <>
+                    <div className="quantity-control">
+                      <motion.button
+                        className="quantity-btn decrease-btn"
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => removeFromCart(product)}
+                      >
+                        -
+                      </motion.button>
+                      <motion.span
+                        className="quantity"
+                        key={cart[product.id].quantity}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {cart[product.id].quantity}
+                      </motion.span>
+                      <motion.button
+                        className="quantity-btn increase-btn"
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => addToCart(product)}
+                      >
+                        +
+                      </motion.button>
+                    </div>
                     <motion.button
-                      className="quantity-btn decrease-btn"
+                      className="remove-btn"
                       whileTap={{ scale: 0.9 }}
-                      onClick={() => removeFromCart(product)}
+                      onClick={() => clearFromCart(product.id)}
                     >
-                      -
+                      Remove
                     </motion.button>
-                    <motion.span
-                      className="quantity"
-                      key={cart[product.id].quantity}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      {cart[product.id].quantity}
-                    </motion.span>
-                    <motion.button
-                      className="quantity-btn increase-btn"
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => addToCart(product)}
-                    >
-                      +
-                    </motion.button>
-                  </div>
-        
+                  </>
+                ) : (
                   <motion.button
-                    className="remove-btn"
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => clearFromCart(product.id)}
+                    className="add-to-cart-btn"
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => addToCart(product)}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    Remove
+                    Add to Cart
                   </motion.button>
-                </>
-              ) : (
-                <motion.button
-                  className="add-to-cart-btn"
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => addToCart(product)}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  Add to Cart
-                </motion.button>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-        </motion.div>
-        
+          </motion.div>
         ))}
       </div>
 

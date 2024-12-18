@@ -218,9 +218,7 @@ textarea {
   background-color: var(--primary-color);
 }
 
-.save-address-btn:hover {
-  background-color: var(--primary-hover-color);
-}
+
 
 .close-popup-btn {
   background-color: #d32f2f;
@@ -261,7 +259,6 @@ textarea {
     }
   }
   
-  /* Background overlay */
   
   /* Input Fields Styling */
   .input-field-for-address {
@@ -295,5 +292,33 @@ textarea {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
+  }
+}
+.toast-message {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #d32f2f;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  z-index: 1000;
+  animation: fadeInOut 3s;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
