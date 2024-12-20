@@ -1,24 +1,20 @@
-
 import { Route, Routes } from "react-router-dom";
-import AllServicesPage from "./components/weddigservice/allservice";
-import CategoryPage from "./components/weddigservice/servicedetails";
-import CartPage from "./components/weddigservice/CartPage"; 
-// import FooterBar from "./components/footer/FooterBar"; 
 
+import "./App.css";
+import CartPage from "./components/weddigservice/CartPage";
+import CategoryPage from "./components/weddigservice/servicedetails";
+import AllServicesPage from "./components/weddigservice/allservice"
 function App() {
   return (
-    <>
-      <div className="app-container">
-        <Routes>
-          <Route path="/" element={<AllServicesPage />} />
-          <Route path="/category/:category" element={<CategoryPage />} />
-          <Route path="/cart" element={<CartPage />} />
-        </Routes>
+    <div className="App">
+      <Routes>
+      <Route path="/" element={<AllServicesPage />} />
 
-        {/* Conditionally render FooterBar */}
-        {/* <FooterBar /> */}
-      </div>
-    </>
+        <Route path="/category/:category" element={<CategoryPage />} />
+
+        <Route path="/cart" element={<CartPage />} />
+      </Routes>
+    </div>
   );
 }
 
