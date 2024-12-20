@@ -25,7 +25,7 @@ export const makeApi = async (
       // url: `https://saburi-backend.onrender.com${endpoint}`,
       // url:"http://localhost:5008"+endpoint,
       headers,
-      data
+      data 
     };
 
     const response = await axios(config);
