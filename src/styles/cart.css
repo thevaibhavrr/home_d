@@ -112,6 +112,7 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 16px ;
   margin-top: 10px;
 }
 
@@ -132,6 +133,7 @@
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 40px);
+  font-size: 1.2rem;
 }
 
 .delivery-section {
@@ -297,6 +299,8 @@ textarea {
     transition: background-color 0.3s;
   }
 }
+
+/* 
 .toast-message {
   position: fixed;
   bottom: 20px;
@@ -311,6 +315,40 @@ textarea {
   animation: fadeInOut 3s;
 }
 
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+} */
+
+/* Add these styles to your CSS file (cart.css or a new file for toast) */
+
+/* Toast message container */
+.toast-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  z-index: 1000; /* Ensure it stays on top */
+  opacity: 0;
+  animation: fadeInOut 3s forwards; /* Fade in and out animation */
+}
+
+/* Animation for the toast */
 @keyframes fadeInOut {
   0% {
     opacity: 0;
