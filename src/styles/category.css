@@ -136,5 +136,26 @@
   transition: background-color 0.3s, transform 0.3s;
 }
 
+/* Add this to your existing CSS file (category.css) */
+
+.product-card.closed {
+  filter: grayscale(100%);
+  pointer-events: none; /* Prevent interaction with closed items */
+}
+
+.closed-message {
+  color: #999;
+  font-size: 1.2rem;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
 
 
