@@ -142,7 +142,7 @@ function CategoryPage() {
                 </p>
 
                 {/* Show closed message if product is not available */}
-                {!isOpen && <div className="closed-message">Closed</div>}
+                {/* {!isOpen && <div className="closed-message">Closed</div>} */}
 
                 <div className="product-actions">
                   {cart[product._id] ? (  // Use _id to check if the product is in the cart
