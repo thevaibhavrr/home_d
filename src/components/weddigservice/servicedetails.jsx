@@ -120,7 +120,8 @@ function CategoryPage() {
           const isOpen = isProductOpen(product.availableTimes);
           return (
             <motion.div
-              className={`product-card ${!isOpen ? "closed" : ""}`}
+              // className={`product-card ${!isOpen ? "closed" : ""}`}
+              className={`product-card`}
               key={product._id}  // Use _id here instead of id
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
