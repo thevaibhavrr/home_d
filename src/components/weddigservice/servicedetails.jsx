@@ -38,14 +38,14 @@
 //       return currentTime >= start && currentTime <= end;
 //     });
 //   };
-  
 
 //   useEffect(() => {
 //     async function fetchCategories() {
 //       try {
 //         setLoading(true);
 //         const response = await makeApi(`/api/get-products-by-service-id/${category}`, "GET");
-//         setProducts(response.data.products);
+//         const sortedProducts = response.data.products.sort((a, b) => a.FinalPrice - b.FinalPrice); // Sort by FinalPrice (ascending)
+//         setProducts(sortedProducts);
 //       } catch (error) {
 //         console.log("Error fetching categories:", error);
 //       } finally {
@@ -120,7 +120,6 @@
 //           const isOpen = isProductOpen(product.availableTimes);
 //           return (
 //             <motion.div
-//               // className={`product-card ${!isOpen ? "closed" : ""}`}
 //               className={`product-card`}
 //               key={product._id}  // Use _id here instead of id
 //               initial={{ opacity: 0, y: 50 }}
@@ -140,9 +139,6 @@
 //                   <span className="original-price">₹{product.price}</span>
 //                   <span className="final-price">₹{product.FinalPrice}</span>
 //                 </p>
-
-//                 {/* Show closed message if product is not available */}
-//                 {/* {!isOpen && <div className="closed-message">Closed</div>} */}
 
 //                 <div className="product-actions">
 //                   {cart[product._id] ? (  // Use _id to check if the product is in the cart
@@ -266,31 +262,9 @@ function CategoryPage() {
   const [cart, setCart] = useState({});
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  // Function to check if the current time is within available times
+  // Updated function to always return false (Closed)
   const isProductOpen = (availableTimes) => {
-    if (!availableTimes || availableTimes.length === 0) return true; // No available times means it's always open
-    
-    const currentTime = new Date();
-    
-    // Loop through all the available time ranges
-    return availableTimes.some((timeRange) => {
-      if (!timeRange) return false; // If timeRange is undefined or null, skip it
-  
-      const [startTime, endTime] = timeRange.split(" - ");
-  
-      if (!startTime || !endTime) return false; // Ensure both startTime and endTime are valid
-  
-      const [startHours, startMinutes] = startTime.split(":").map(Number);
-      const [endHours, endMinutes] = endTime.split(":").map(Number);
-  
-      const start = new Date(currentTime);
-      start.setHours(startHours, startMinutes, 0, 0);
-  
-      const end = new Date(currentTime);
-      end.setHours(endHours, endMinutes, 0, 0);
-  
-      return currentTime >= start && currentTime <= end;
-    });
+    return false; // All products are considered closed
   };
 
   useEffect(() => {
@@ -371,10 +345,10 @@ function CategoryPage() {
       </h1>
       <div className="product-list">
         {products.map((product) => {
-          const isOpen = isProductOpen(product.availableTimes);
+          const isOpen = isProductOpen(product.availableTimes); // Always returns false (closed)
           return (
             <motion.div
-              className={`product-card`}
+              className={`product-card ${!isOpen ? "closed" : ""}`}
               key={product._id}  // Use _id here instead of id
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -391,8 +365,12 @@ function CategoryPage() {
                 {/* Display original FinalPrice with a strikethrough and final price */}
                 <p className="product-price">
                   <span className="original-price">₹{product.price}</span>
+
                   <span className="final-price">₹{product.FinalPrice}</span>
+                {/* {!isOpen && <div style={{ color: "red" , fontWeight: "bold" }}>Closed</div>} */}
                 </p>
+
+                {!isOpen && <div className="closed-message">Closed</div>}
 
                 <div className="product-actions">
                   {cart[product._id] ? (  // Use _id to check if the product is in the cart
