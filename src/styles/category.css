@@ -159,3 +159,13 @@
 
 
 
+
+
+.product-card.closed {
+  filter: grayscale(100%);
+  pointer-events: none; /* Prevent interaction with closed items */
+}
+
+.closed-message {
+  color: #999;
+}
