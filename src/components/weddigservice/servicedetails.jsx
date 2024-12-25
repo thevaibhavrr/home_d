@@ -389,7 +389,7 @@ function CategoryPage() {
 
                   <span className="final-price">₹{product.FinalPrice}</span>
                 </p>
-                  <div className="closed-message">Closed</div>
+                  {/* <div className="closed-message">Closed</div> */}
 
 
                 {/* Display minorderquantity below price in red */}
