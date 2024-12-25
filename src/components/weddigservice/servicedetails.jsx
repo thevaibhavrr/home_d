@@ -368,7 +368,8 @@ function CategoryPage() {
         {products.map((product) => {
           return (
             <motion.div
-              className="product-card closed"
+              className="product-card"
+              // className="product-card closed"
               key={product._id} // Use _id here instead of id
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
