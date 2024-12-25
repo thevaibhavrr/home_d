@@ -7,7 +7,6 @@
 
 // // All Services Page Component
 // function AllServicesPage() {
- 
 //   const [categories, setCategories] = useState([]);
 //   const [loading, setLoading] = useState(false);
 
@@ -16,13 +15,23 @@
 //       try {
 //         setLoading(true);
 //         const response = await makeApi("/api/get-all-categories", "GET");
-//         setCategories(response.data);
+        
+//         // Preset order for categories
+//         const categoryOrder = [ "General store","Milk",  "Medicine"];
+        
+//         // Sort the categories array based on the preset order
+//         const sortedCategories = response.data.sort((a, b) => {
+//           return categoryOrder.indexOf(a.name) - categoryOrder.indexOf(b.name);
+//         });
+
+//         setCategories(sortedCategories);
 //       } catch (error) {
 //         console.log("Error fetching categories:", error);
 //       } finally {
 //         setLoading(false);
 //       }
 //     }
+
 //     fetchCategories();
 //   }, []);
 
@@ -35,10 +44,9 @@
 //         <div className="all-services-page">
 //           <div className="services-container">
 //             {categories.map((service) => (
-
 //               <motion.div
 //                 className="service-card"
-//                 key={service.id}
+//                 key={service._id}  // Using _id as the key to ensure uniqueness
 //                 initial={{ scale: 0.8, y: 100 }}
 //                 animate={{ scale: 1, y: 0 }}
 //                 transition={{ duration: 0.4 }}
@@ -53,19 +61,12 @@
 //             ))}
 //           </div>
 //         </div>
-
 //       )}
 //     </>
 //   );
 // }
 
 // export default AllServicesPage;
-
-
-
-
-
-
 
 
 import "../../styles/allservice.css";
@@ -87,11 +88,23 @@ function AllServicesPage() {
         const response = await makeApi("/api/get-all-categories", "GET");
         
         // Preset order for categories
-        const categoryOrder = [ "Milk", "General store", "Medicine"];
-        
+        const categoryOrder = ["Food","Thali" ,"General store", "Milk", "Shakes"];
+
         // Sort the categories array based on the preset order
         const sortedCategories = response.data.sort((a, b) => {
-          return categoryOrder.indexOf(a.name) - categoryOrder.indexOf(b.name);
+          const indexA = categoryOrder.indexOf(a.name);
+          const indexB = categoryOrder.indexOf(b.name);
+          
+          // If one of the categories is in the preset order, sort accordingly
+          if (indexA === -1 && indexB === -1) {
+            // Both not in preset order, sort alphabetically
+            return a.name.localeCompare(b.name);
+          }
+          
+          // Sort based on preset order
+          if (indexA === -1) return 1; // If A is not in preset order, it should come after B
+          if (indexB === -1) return -1; // If B is not in preset order, it should come after A
+          return indexA - indexB; // Normal sort based on preset order
         });
 
         setCategories(sortedCategories);
@@ -109,7 +122,6 @@ function AllServicesPage() {
     <>
       {loading ? (
         <Loader />
-        // "Loading..."
       ) : (
         <div className="all-services-page">
           <div className="services-container">
