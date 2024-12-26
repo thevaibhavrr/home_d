@@ -3,7 +3,6 @@
   font-family: var(--font-family);
   background-color: var(--background-color);
   min-height: 100vh;
-  margin-bottom: 300px;
 }
 
 .category-title {

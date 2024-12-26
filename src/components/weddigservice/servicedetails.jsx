@@ -66,20 +66,6 @@ function CategoryPage() {
     });
   };
 
-  // Function to handle increasing the quantity (when "+" button is clicked)
-  // const handleIncreaseQuantity = (product) => {
-  //   setCart((prevCart) => {
-  //     const updatedCart = { ...prevCart };
-  //     const existingProduct = prevCart[product._id];
-
-  //     // If the product exists in the cart, increase its quantity by 1
-  //     if (existingProduct) {
-  //       updatedCart[product._id].quantity += 1;
-  //     }
-
-  //     return updatedCart;
-  //   });
-  // };
 
     const handleIncreaseQuantity = (product) => {
     setCart((prevCart) => {
