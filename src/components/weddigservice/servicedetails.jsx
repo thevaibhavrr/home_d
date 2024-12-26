@@ -131,8 +131,8 @@ function CategoryPage() {
         {products.map((product) => {
           return (
             <motion.div
-              // className="product-card"
-              className="product-card closed"
+              className="product-card"
+              // className="product-card closed"
               key={product._id} // Use _id here instead of id
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -152,7 +152,7 @@ function CategoryPage() {
 
                   <span className="final-price">₹{product.FinalPrice}</span>
                 </p>
-                  <div className="closed-message">Closed</div>
+                  {/* <div className="closed-message">Closed</div> */}
 
 
                 {/* Display minorderquantity below price in red */}
