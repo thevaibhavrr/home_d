@@ -4,6 +4,7 @@ import "../../styles/category.css";
 import "../../styles/cartpop.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { makeApi } from "../../api/callApi";
+import Loader from "../../components/loader/loader";
 
 function CategoryPage() {
   const { category } = useParams();
@@ -14,8 +15,8 @@ function CategoryPage() {
 
   useEffect(() => {
     async function fetchCategories() {
+      setLoading(true);
       try {
-        setLoading(true);
         const response = await makeApi(`/api/get-products-by-service-id/${category}`, "GET");
         const sortedProducts = response.data.products.sort((a, b) => a.FinalPrice - b.FinalPrice); // Sort by FinalPrice (ascending)
         setProducts(sortedProducts);
@@ -67,7 +68,7 @@ function CategoryPage() {
   };
 
 
-    const handleIncreaseQuantity = (product) => {
+  const handleIncreaseQuantity = (product) => {
     setCart((prevCart) => {
       const updatedCart = {
         ...prevCart,
@@ -108,149 +109,158 @@ function CategoryPage() {
   };
 
   return (
-    <div className="category-page">
-      <h1 className="category-title">
-        {category.charAt(0).toUpperCase() + category.slice(1)}
-      </h1>
+    <>
+      {loading ? (
+        <div style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }} >
+          <Loader />
+        </div>
+      ) : (
+        <div className="category-page">
+          <h1 className="category-title">
+            {category.charAt(0).toUpperCase() + category.slice(1)}
+          </h1>
 
-      <div className="product-list">
-        {products.map((product) => {
-          return (
-            <motion.div
-              className="product-card"
-              // className="product-card closed"
-              key={product._id} // Use _id here instead of id
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <img
-                src={product.thumbnail}
-                alt={product.name}
-                className="product-image"
-              />
-              <div className="product-info">
-                <h2 className="product-name">{product.name}</h2>
+          <div className="product-list">
+            {products.map((product) => {
+              return (
+                <motion.div
+                  className="product-card"
+                  // className="product-card closed"
+                  key={product._id} // Use _id here instead of id
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <img
+                    src={product.thumbnail}
+                    alt={product.name}
+                    className="product-image"
+                  />
+                  <div className="product-info">
+                    <h2 className="product-name">{product.name}</h2>
 
-                {/* Display original FinalPrice with a strikethrough and final price */}
-                <p className="product-price">
-                  <span className="original-price">₹{product.price}</span>
+                    {/* Display original FinalPrice with a strikethrough and final price */}
+                    <p className="product-price">
+                      <span className="original-price">₹{product.price}</span>
 
-                  <span className="final-price">₹{product.FinalPrice}</span>
-                </p>
-                  {/* <div className="closed-message">Closed</div> */}
+                      <span className="final-price">₹{product.FinalPrice}</span>
+                    </p>
+                    {/* <div className="closed-message">Closed</div> */}
 
 
-                {/* Display minorderquantity below price in red */}
-                {product.minorderquantity && (
-                  <p style={{ color: "red" }}>
-                    Min Order Quantity: {product.minorderquantity}
-                  </p>
-                )}
+                    {/* Display minorderquantity below price in red */}
+                    {product.minorderquantity && (
+                      <p style={{ color: "red" }}>
+                        Min Order Quantity: {product.minorderquantity}
+                      </p>
+                    )}
 
-                <div className="product-actions">
-                  {cart[product._id] ? ( // Use _id to check if the product is in the cart
-                    <>
-                      <div className="quantity-control">
+                    <div className="product-actions">
+                      {cart[product._id] ? ( // Use _id to check if the product is in the cart
+                        <>
+                          <div className="quantity-control">
+                            <motion.button
+                              className="quantity-btn decrease-btn"
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => handleDecreaseQuantity(product)} // Decrease the quantity
+                            >
+                              -
+                            </motion.button>
+                            <motion.span
+                              className="quantity"
+                              key={cart[product._id].quantity}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              {cart[product._id].quantity}
+                            </motion.span>
+                            <motion.button
+                              className="quantity-btn increase-btn"
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => handleIncreaseQuantity(product)} // Increase the quantity by 1
+                            >
+                              +
+                            </motion.button>
+                          </div>
+                          <motion.button
+                            className="remove-btn"
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => clearFromCart(product._id)} // Use _id to remove from cart
+                          >
+                            Remove
+                          </motion.button>
+                        </>
+                      ) : (
                         <motion.button
-                          className="quantity-btn decrease-btn"
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleDecreaseQuantity(product)} // Decrease the quantity
-                        >
-                          -
-                        </motion.button>
-                        <motion.span
-                          className="quantity"
-                          key={cart[product._id].quantity}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
+                          className="add-to-cart-btn"
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => handleAddToCart(product)} // First time, set to minorderquantity
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
                           transition={{ duration: 0.3 }}
                         >
-                          {cart[product._id].quantity}
-                        </motion.span>
-                        <motion.button
-                          className="quantity-btn increase-btn"
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleIncreaseQuantity(product)} // Increase the quantity by 1
-                        >
-                          +
+                          Add to Cart
                         </motion.button>
-                      </div>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Mini Cart Popup */}
+          <AnimatePresence>
+            {Object.keys(cart).length > 0 && (
+              <motion.div
+                className="mini-cart"
+                initial={{ opacity: 0, y: 100 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 100 }}
+                transition={{ duration: 0.4 }}
+              >
+                <div className="cart-title-popup">Cart</div>
+                <ul className="cart-items">
+                  {Object.values(cart).map((item) => (
+                    <motion.li
+                      key={item._id} // Use _id for unique key
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.8, delay: 0.4 }}
+                    >
+                      {item.name} x {item.quantity} = ₹{item.FinalPrice * item.quantity}
                       <motion.button
-                        className="remove-btn"
+                        className="remove-btn-mini"
                         whileTap={{ scale: 0.9 }}
-                        onClick={() => clearFromCart(product._id)} // Use _id to remove from cart
+                        onClick={() => clearFromCart(item._id)} // Remove from cart using _id
                       >
                         Remove
                       </motion.button>
-                    </>
-                  ) : (
-                    <motion.button
-                      className="add-to-cart-btn"
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => handleAddToCart(product)} // First time, set to minorderquantity
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      Add to Cart
-                    </motion.button>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-
-      {/* Mini Cart Popup */}
-      <AnimatePresence>
-        {Object.keys(cart).length > 0 && (
-          <motion.div
-            className="mini-cart"
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 100 }}
-            transition={{ duration: 0.4 }}
-          >
-            <div className="cart-title-popup">Cart</div>
-            <ul className="cart-items">
-              {Object.values(cart).map((item) => (
-                <motion.li
-                  key={item._id} // Use _id for unique key
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
-                >
-                  {item.name} x {item.quantity} = ₹{item.FinalPrice * item.quantity}
-                  <motion.button
-                    className="remove-btn-mini"
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => clearFromCart(item._id)} // Remove from cart using _id
+                    </motion.li>
+                  ))}
+                </ul>
+                <div className="cart-footer">
+                  <motion.p
+                    key={getTotalCartValue()}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
                   >
-                    Remove
-                  </motion.button>
-                </motion.li>
-              ))}
-            </ul>
-            <div className="cart-footer">
-              <motion.p
-                key={getTotalCartValue()}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-              >
-                Total: ₹{getTotalCartValue()}
-              </motion.p>
-              <Link to={"/cart"} style={{ textDecoration: "none" }}>
-                <button className="buy-now-btn">Buy Now</button>
-              </Link>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+                    Total: ₹{getTotalCartValue()}
+                  </motion.p>
+                  <Link to={"/cart"} style={{ textDecoration: "none" }}>
+                    <button className="buy-now-btn">Buy Now</button>
+                  </Link>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )
+      }
+    </>
   );
 }
 

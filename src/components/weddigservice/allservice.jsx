@@ -114,7 +114,9 @@ function AllServicesPage() {
   return (
     <>
       {loading ? (
+        <div style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }} >
         <Loader />
+        </div>
       ) : (
         <div className="all-services-page">
           <div className="services-container">
