@@ -16,7 +16,7 @@
 
 .service-card {
   border-radius: 8px;
-  width: 250px;
+  width: 152px;
   transition: transform 0.3s;
   overflow: hidden;
 }
@@ -26,8 +26,8 @@
 }
 
 .service-image {
-  width: 127px;
-  height: 134px;
+  width: 116px;
+  height: 126px;
   object-fit: cover;
   border-radius: 22%;
   border: 2px solid var(--primary-color);
