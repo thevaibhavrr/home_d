@@ -33,8 +33,8 @@
 //   return (
 //     <>
 //       {loading ? (
-//         <div style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }} >
-//         <Loader />
+//         <div style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+//           <Loader />
 //         </div>
 //       ) : (
 //         <div className="all-services-page">
@@ -52,7 +52,7 @@
 //                   className="service-link"
 //                 >
 //                   <img
-//                     src={service.image}
+//                     src={service.image.replace('http://', 'https://')} // Replaces "http://" with "https://"
 //                     alt={service.name}
 //                     className="service-image"
 //                   />
@@ -70,6 +70,8 @@
 // }
 
 // export default AllServicesPage;
+
+
 import "../../styles/allservice.css";
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
@@ -80,7 +82,9 @@ import Loader from "../../components/loader/loader";
 // All Services Page Component
 function AllServicesPage() {
   const [categories, setCategories] = useState([]);
+  const [filteredCategories, setFilteredCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     async function fetchCategories() {
@@ -92,6 +96,7 @@ function AllServicesPage() {
         const sortedCategories = response.data.sort((a, b) => a.poistionId - b.poistionId);
 
         setCategories(sortedCategories);
+        setFilteredCategories(sortedCategories); // Initially display all categories
       } catch (error) {
         console.log("Error fetching categories:", error);
       } finally {
@@ -102,6 +107,21 @@ function AllServicesPage() {
     fetchCategories();
   }, []);
 
+  // Handle search input change
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    if (query === '') {
+      setFilteredCategories(categories); // If search is empty, show all categories
+    } else {
+      const filtered = categories.filter((service) =>
+        service.name.toLowerCase().includes(query)
+      );
+      setFilteredCategories(filtered);
+    }
+  };
+
   return (
     <>
       {loading ? (
@@ -110,8 +130,35 @@ function AllServicesPage() {
         </div>
       ) : (
         <div className="all-services-page">
+          {/* Image Slider Section */}
+          {/* <div className="image-slider">
+            <div className="slider-container">
+              {categories.slice(0, 5).map((service) => (
+                <div key={service._id} className="slider-item">
+                  <img
+                    src={service.image.replace('http://', 'https://')}
+                    alt={service.name}
+                    className="slider-image"
+                  />
+                </div>
+              ))}
+            </div>
+          </div> */}
+
+          {/* Search Input Section */}
+          {/* <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search for services..."
+              value={searchQuery}
+              onChange={handleSearch}
+              className="search-input"
+            />
+          </div> */}
+
+          {/* Services Section */}
           <div className="services-container">
-            {categories.map((service) => (
+            {filteredCategories.map((service) => (
               <motion.div
                 className="service-card"
                 key={service._id} // Using _id as the key to ensure uniqueness
@@ -124,7 +171,7 @@ function AllServicesPage() {
                   className="service-link"
                 >
                   <img
-                    src={service.image.replace('http://', 'https://')} // Replaces "http://" with "https://"
+                    src={service.image.replace('http://', 'https://')}
                     alt={service.name}
                     className="service-image"
                   />
