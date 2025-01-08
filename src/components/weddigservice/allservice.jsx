@@ -322,6 +322,11 @@ function AllServicesPage() {
 
     fetchProducts();
   }, [searchQuery]);
+  const clearCart = () => {
+    setCart({});
+    localStorage.removeItem("cart"); // Clear the cart data from localStorage
+  };
+
 
   // Load cart from localStorage
   useEffect(() => {
@@ -538,7 +543,29 @@ function AllServicesPage() {
             exit={{ opacity: 0, y: 100 }}
             transition={{ duration: 0.4 }}
           >
-            <div className="cart-title-popup">Cart</div>
+            <div style={{ display: "flex", justifyContent: "space-between" }} >
+
+              <div className="cart-title-popup">Cart</div>
+              <div>
+
+                <motion.button
+                  className="clear-cart-btn"
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => clearCart()}
+                  style={{
+                    marginTop: "10px",
+                    backgroundColor: "#e74c3c",
+                    color: "#fff",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Clear Cart
+                </motion.button>
+              </div>
+            </div>
             <ul className="cart-items">
               {Object.values(cart).map((item) => (
                 <motion.li
@@ -571,10 +598,12 @@ function AllServicesPage() {
               <Link to="/cart" style={{ textDecoration: "none" }}>
                 <button className="buy-now-btn">Buy Now</button>
               </Link>
+
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
     </div>
   );
 }
