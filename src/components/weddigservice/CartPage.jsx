@@ -268,7 +268,7 @@ const CartPage = () => {
                 placeholder="Enter your mobile number"
                 value={mobileNumber}
                 onChange={handleMobileChange}
-                maxLength="10"
+                maxLength="14"
                 className="input-field-for-address"
                 required
               />
