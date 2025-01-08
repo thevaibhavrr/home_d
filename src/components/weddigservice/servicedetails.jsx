@@ -69,6 +69,11 @@ function CategoryPage() {
       0
     );
   };
+  const clearCart = () => {
+    setCart({});
+    localStorage.removeItem("cart"); // Clear the cart data from localStorage
+  };
+  
 
   // Function to handle adding items to the cart when the "Add to Cart" button is clicked
   const handleAddToCart = (product) => {
@@ -229,52 +234,75 @@ function CategoryPage() {
           </div>
 
           {/* Mini Cart Popup */}
-          <AnimatePresence>
-            {Object.keys(cart).length > 0 && (
-              <motion.div
-                className="mini-cart"
-                initial={{ opacity: 0, y: 100 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 100 }}
-                transition={{ duration: 0.4 }}
-              >
-                <div className="cart-title-popup">Cart</div>
-                <ul className="cart-items">
-                  {Object.values(cart).map((item) => (
-                    <motion.li
-                      key={item._id} // Use _id for unique key
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      transition={{ duration: 0.8, delay: 0.4 }}
-                    >
-                      {item.name} x {item.quantity} = ₹{item.FinalPrice * item.quantity}
-                      <motion.button
-                        className="remove-btn-mini"
-                        whileTap={{ scale: 0.9 }}
-                        onClick={() => clearFromCart(item._id)} // Remove from cart using _id
-                      >
-                        Remove
-                      </motion.button>
-                    </motion.li>
-                  ))}
-                </ul>
-                <div className="cart-footer">
-                  <motion.p
-                    key={getTotalCartValue()}
-                    initial={{ opacity: 0, y: 10 }}
+           <AnimatePresence>
+                {Object.keys(cart).length > 0 && (
+                  <motion.div
+                    className="mini-cart"
+                    initial={{ opacity: 0, y: 100 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.4 }}
+                    exit={{ opacity: 0, y: 100 }}
+                    transition={{ duration: 0.4 }}
                   >
-                    Total: ₹{getTotalCartValue()}
-                  </motion.p>
-                  <Link to={"/cart"} style={{ textDecoration: "none" }}>
-                    <button className="buy-now-btn">Buy Now</button>
-                  </Link>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                    <div style={{ display: "flex", justifyContent: "space-between" }} >
+        
+                      <div className="cart-title-popup">Cart</div>
+                      <div>
+        
+                        <motion.button
+                          className="clear-cart-btn"
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => clearCart()}
+                          style={{
+                            marginTop: "10px",
+                            backgroundColor: "#e74c3c",
+                            color: "#fff",
+                            border: "none",
+                            padding: "10px 20px",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Clear Cart
+                        </motion.button>
+                      </div>
+                    </div>
+                    <ul className="cart-items">
+                      {Object.values(cart).map((item) => (
+                        <motion.li
+                          key={item._id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          transition={{ duration: 0.8 }}
+                        >
+                          {item.name} x {item.quantity} = ₹{item.FinalPrice * item.quantity}
+                          <motion.button
+                            className="remove-btn-mini"
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => clearFromCart(item._id)}
+                          >
+                            Remove
+                          </motion.button>
+                        </motion.li>
+                      ))}
+                    </ul>
+                    <div className="cart-footer">
+                      <motion.p
+                        key={getTotalCartValue()}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        Total: ₹{getTotalCartValue()}
+                      </motion.p>
+                      <Link to="/cart" style={{ textDecoration: "none" }}>
+                        <button className="buy-now-btn">Buy Now</button>
+                      </Link>
+        
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
         </div>
         <div style={{ height: "60vh" }} ></div>
         </>
