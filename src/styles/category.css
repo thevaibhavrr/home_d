@@ -44,8 +44,8 @@
   transition: all 0.5s ease;
 }
 .product-image:hover {
-  width: 200px;
-  height: 140px;
+  width: 150px;
+  height: 120px;
   object-fit: cover;
   border-radius: 4px;
   margin-right: 10px;
