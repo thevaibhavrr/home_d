@@ -1,267 +1,4 @@
 
-// import "../../styles/allservice.css";
-// import { Link } from "react-router-dom";
-// import React, { useEffect, useState } from "react";
-// import { motion } from "framer-motion";
-// import { makeApi } from "../../api/callApi";
-// import Loader from "../../components/loader/loader";
-
-// // All Services Page Component
-// function AllServicesPage() {
-//   const [categories, setCategories] = useState([]);
-//   const [filteredCategories, setFilteredCategories] = useState([]);
-//   const [loading, setLoading] = useState(false);
-//   const [searchQuery, setSearchQuery] = useState('');
-
-//   useEffect(() => {
-//     async function fetchCategories() {
-//       try {
-//         setLoading(true);
-//         const response = await makeApi("/api/get-all-categories", "GET");
-
-//         // Sort the categories array based on the `poistionId` field
-//         const sortedCategories = response.data.sort((a, b) => a.poistionId - b.poistionId);
-
-//         setCategories(sortedCategories);
-//         setFilteredCategories(sortedCategories); // Initially display all categories
-//       } catch (error) {
-//         console.log("Error fetching categories:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     }
-
-//     fetchCategories();
-//   }, []);
-
-//   // Handle search input change
-//   const handleSearch = (e) => {
-//     const query = e.target.value.toLowerCase();
-//     setSearchQuery(query);
-
-//     if (query === '') {
-//       setFilteredCategories(categories); // If search is empty, show all categories
-//     } else {
-//       const filtered = categories.filter((service) =>
-//         service.name.toLowerCase().includes(query)
-//       );
-//       setFilteredCategories(filtered);
-//     }
-//   };
-
-//   return (
-//     <>
-//       {loading ? (
-//         <div style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
-//           <Loader />
-//         </div>
-//       ) : (
-//         <div className="all-services-page">
-//           <div className="search-container">
-//             <input
-//               type="text"
-//               placeholder="Search for services..."
-//               value={searchQuery}
-//               onChange={handleSearch}
-//               className="search-input"
-//             /> 
-//           </div>
-
-//           {/* Services Section */}
-//           <div className="services-container">
-//             {filteredCategories.map((service) => (
-//               <motion.div
-//                 className="service-card"
-//                 key={service._id} // Using _id as the key to ensure uniqueness
-//                 initial={{ scale: 0.8, y: 100 }}
-//                 animate={{ scale: 1, y: 0 }}
-//                 transition={{ duration: 0.4 }}
-//               >
-//                 <Link
-//                   to={`/category/${service.name.toLowerCase()}`}
-//                   className="service-link"
-//                 >
-//                   <img
-//                     src={service.image.replace('http://', 'https://')}
-//                     alt={service.name}
-//                     className="service-image"
-//                   />
-//                   <div className="service-details">
-//                     <h2 className="service-title">{service.name}</h2>
-//                   </div>
-//                 </Link>
-//               </motion.div>
-//             ))}
-//           </div>
-//         </div>
-//       )}
-//     </>
-//   );
-// }
-
-// export default AllServicesPage;
-
-
-
-// import "../../styles/allservice.css";
-// import { Link } from "react-router-dom";
-// import React, { useEffect, useState } from "react";
-// import { motion } from "framer-motion";
-// import { makeApi } from "../../api/callApi";
-// import Loader from "../../components/loader/loader";
-
-// // All Services Page Component
-// function AllServicesPage() {
-//   const [categories, setCategories] = useState([]);
-//   const [filteredCategories, setFilteredCategories] = useState([]);
-//   const [products, setProducts] = useState([]);
-//   const [loading, setLoading] = useState(false);
-//   const [searchQuery, setSearchQuery] = useState("");
-//   const [isSearchingProducts, setIsSearchingProducts] = useState(false);
-
-//   useEffect(() => {
-//     async function fetchCategories() {
-//       try {
-//         const response = await makeApi("/api/get-all-categories", "GET");
-
-//         // Sort the categories array based on the `poistionId` field
-//         const sortedCategories = response.data.sort((a, b) => a.poistionId - b.poistionId);
-
-//         setCategories(sortedCategories);
-//         setFilteredCategories(sortedCategories); // Initially display all categories
-//       } catch (error) {
-//         console.log("Error fetching categories:", error);
-//       }
-//     }
-
-//     fetchCategories();
-//   }, []);
-
-//   // Fetch related products when search query changes
-//   useEffect(() => {
-//     if (!searchQuery) {
-//       setProducts([]);
-//       setIsSearchingProducts(false);
-//       return;
-//     }
-
-//     async function fetchProducts() {
-//       try {
-//         setLoading(true);
-//         const response = await makeApi(`/api/products/search?word=${searchQuery}`, "GET");
-//         setProducts(response.data.products);
-//         setIsSearchingProducts(true);
-//       } catch (error) {
-//         console.log("Error fetching products:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     }
-
-//     fetchProducts();
-//   }, [searchQuery]);
-
-//   // Handle search input change
-//   const handleSearch = (e) => {
-//     const query = e.target.value.toLowerCase();
-//     setSearchQuery(query);
-//   };
-
-//   return (
-//     <div className="all-services-page">
-//       <div className="search-container">
-//         <input
-//           type="text"
-//           placeholder="Search for services or products..."
-//           value={searchQuery}
-//           onChange={handleSearch}
-//           className="search-input"
-//         />
-
-//         {/* Show loader below input field when loading */}
-//         {loading && (
-//           <div style={{ marginTop: "10px", display: "flex", justifyContent: "center" }}>
-//             <Loader />
-//           </div>
-//         )}
-//       </div>
-
-//       {/* Conditionally show products or categories */}
-//       {isSearchingProducts ? (
-//         <div className="product-list">
-//           {products.map((product) => {
-//             return (
-//               <motion.div
-//                 className="product-card"
-//                 key={product._id} // Use _id here instead of id
-//                 initial={{ opacity: 0, y: 50 }}
-//                 animate={{ opacity: 1, y: 0 }}
-//                 transition={{ duration: 0.3 }}
-//               >
-//                 <img
-//                   src={product.thumbnail.replace("http://", "https://")}
-//                   alt={product.name}
-//                   className="product-image"
-//                 />
-//                 <div className="product-info">
-//                   <h2 className="product-name">{product.name}</h2>
-//                   <p className="product-price">
-//                     <span className="original-price">₹{product.price}</span>
-//                     <span className="final-price">₹{product.FinalPrice}</span>
-//                   </p>
-//                   {product.minorderquantity && (
-//                     <p style={{ color: "red" }}>
-//                       Min Order Quantity: {product.minorderquantity}
-//                     </p>
-//                   )}
-//                   <div className="product-actions">
-//                     {/* Placeholder actions */}
-//                     <motion.button
-//                       className="add-to-cart-btn"
-//                       whileTap={{ scale: 0.95 }}
-//                     >
-//                       Add to Cart
-//                     </motion.button>
-//                   </div>
-//                 </div>
-//               </motion.div>
-//             );
-//           })}
-//         </div>
-//       ) : (
-//         <div className="services-container">
-//           {filteredCategories.map((service) => (
-//             <motion.div
-//               className="service-card"
-//               key={service._id} // Using _id as the key to ensure uniqueness
-//               initial={{ scale: 0.8, y: 100 }}
-//               animate={{ scale: 1, y: 0 }}
-//               transition={{ duration: 0.4 }}
-//             >
-//               <Link
-//                 to={`/category/${service.name.toLowerCase()}`}
-//                 className="service-link"
-//               >
-//                 <img
-//                   src={service.image.replace("http://", "https://")}
-//                   alt={service.name}
-//                   className="service-image"
-//                 />
-//                 <div className="service-details">
-//                   <h2 className="service-title">{service.name}</h2>
-//                 </div>
-//               </Link>
-//             </motion.div>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
-// export default AllServicesPage;
-
-
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/allservice.css";
@@ -280,10 +17,13 @@ function AllServicesPage() {
   const [cart, setCart] = useState({});
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
+
   // Fetch categories on mount
   useEffect(() => {
     async function fetchCategories() {
+      setLoading(true);
       try {
+
         const response = await makeApi("/api/get-all-categories", "GET");
 
         // Sort categories by position
@@ -293,6 +33,8 @@ function AllServicesPage() {
         setFilteredCategories(sortedCategories); // Initially display all categories
       } catch (error) {
         console.log("Error fetching categories:", error);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -308,8 +50,8 @@ function AllServicesPage() {
     }
 
     async function fetchProducts() {
+      setLoading(true);
       try {
-        setLoading(true);
         const response = await makeApi(`/api/products/search?word=${searchQuery}`, "GET");
         setProducts(response.data.products);
         setIsSearchingProducts(true);

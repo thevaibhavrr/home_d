@@ -41,6 +41,14 @@
   object-fit: cover;
   border-radius: 8px;
   margin-right: 10px;
+  transition: all 0.5s ease;
+}
+.product-image:hover {
+  width: 200px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 10px;
 }
 
 .product-info {
