@@ -51,7 +51,7 @@ const CartPage = () => {
 
   const handleDecreaseQuantity = (id) => {
     const updatedCart = cart.map((item) =>
-      item._id === id && item.quantity > 1
+      item._id === id && item.quantity > item.minorderquantity
         ? { ...item, quantity: item.quantity - 1 }
         : item
     );
