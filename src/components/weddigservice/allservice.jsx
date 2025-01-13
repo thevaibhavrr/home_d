@@ -16,7 +16,7 @@ function AllServicesPage() {
   const [isSearchingProducts, setIsSearchingProducts] = useState(false);
   const [cart, setCart] = useState({});
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-
+const [topsall, setTopsall] = useState([]);
 
   // Fetch categories on mount
   useEffect(() => {
@@ -31,6 +31,23 @@ function AllServicesPage() {
 
         setCategories(sortedCategories);
         setFilteredCategories(sortedCategories); // Initially display all categories
+      } catch (error) {
+        console.log("Error fetching categories:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchCategories();
+  }, []);
+  useEffect(() => {
+    async function fetchCategories() {
+      setLoading(true);
+      try {
+
+        const response = await makeApi("/api/gettopsaller", "GET");
+
+        setTopsall(response.data.products);
       } catch (error) {
         console.log("Error fetching categories:", error);
       } finally {
@@ -156,6 +173,81 @@ function AllServicesPage() {
 
   return (
     <div className="all-services-page">
+       <div className="product-list">
+          {topsall.map((product) => (
+            <motion.div
+              className="product-card"
+              key={product._id}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <img
+                src={product.thumbnail.replace("http://", "https://")}
+                alt={product.name}
+                className="product-image"
+              />
+              <div className="product-info">
+                <h2 className="product-name">{product.name}</h2>
+                <p className="product-price">
+                  <span className="original-price">₹{product.price}</span>
+                  <span className="final-price">₹{product.FinalPrice}</span>
+                </p>
+                {product.minorderquantity && (
+                  <p style={{ color: "red" }}>
+                    Min Order Quantity: {product.minorderquantity}
+                  </p>
+                )}
+                <div className="product-actions">
+                  {cart[product._id] ? (
+                    <>
+                      <div className="quantity-control">
+                        <motion.button
+                          className="quantity-btn decrease-btn"
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => handleDecreaseQuantity(product)}
+                        >
+                          -
+                        </motion.button>
+                        <motion.span
+                          className="quantity"
+                          key={cart[product._id].quantity}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {cart[product._id].quantity}
+                        </motion.span>
+                        <motion.button
+                          className="quantity-btn increase-btn"
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => handleIncreaseQuantity(product)}
+                        >
+                          +
+                        </motion.button>
+                      </div>
+                      <motion.button
+                        className="remove-btn"
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => clearFromCart(product._id)}
+                      >
+                        Remove
+                      </motion.button>
+                    </>
+                  ) : (
+                    <motion.button
+                      className="add-to-cart-btn"
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleAddToCart(product)}
+                    >
+                      Add to Cart
+                    </motion.button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       <div className="search-container">
         <input
           type="text"
@@ -299,12 +391,13 @@ function AllServicesPage() {
                     backgroundColor: "#e74c3c",
                     color: "#fff",
                     border: "none",
-                    padding: "10px 20px",
+                    padding: "5px 5px",
                     borderRadius: "5px",
                     cursor: "pointer",
+                    fontSize: "13px",
                   }}
                 >
-                  Clear Cart
+                  Clear
                 </motion.button>
               </div>
             </div>
@@ -345,6 +438,7 @@ function AllServicesPage() {
           </motion.div>
         )}
       </AnimatePresence>
+      <div style={{ height: "60vh" }} ></div>
 
     </div>
   );

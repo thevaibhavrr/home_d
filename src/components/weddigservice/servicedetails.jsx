@@ -257,12 +257,13 @@ function CategoryPage() {
                             backgroundColor: "#e74c3c",
                             color: "#fff",
                             border: "none",
-                            padding: "10px 20px",
+                            padding: "5px 5px",
                             borderRadius: "5px",
                             cursor: "pointer",
+                            fontSize: "13px",
                           }}
                         >
-                          Clear Cart
+                          Clear
                         </motion.button>
                       </div>
                     </div>
