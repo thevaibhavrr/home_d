@@ -16,7 +16,7 @@ function AllServicesPage() {
   const [isSearchingProducts, setIsSearchingProducts] = useState(false);
   const [cart, setCart] = useState({});
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-const [topsall, setTopsall] = useState([]);
+  const [topsall, setTopsall] = useState([]);
 
   // Fetch categories on mount
   useEffect(() => {
@@ -44,10 +44,23 @@ const [topsall, setTopsall] = useState([]);
     async function fetchCategories() {
       setLoading(true);
       try {
-
         const response = await makeApi("/api/gettopsaller", "GET");
+        const sortedProducts = response.data.products.sort(
+          (a, b) => a.FinalPrice - b.FinalPrice
+        );
 
-        setTopsall(response.data.products);
+        // Add default shop and price for products with shopPrices
+        const updatedProducts = sortedProducts.map((product) => {
+          if (product.shopPrices?.length > 0) {
+            product.defaultShop = product.shopPrices[0].shopname;
+            product.defaultPrice = product.shopPrices[0].price;
+            product.defaultFinalPrice = product.shopPrices[0].FinalPrice;
+          }
+          return product;
+        });
+
+        setTopsall(updatedProducts);
+        // setTopsall(response.data.products);
       } catch (error) {
         console.log("Error fetching categories:", error);
       } finally {
@@ -70,7 +83,22 @@ const [topsall, setTopsall] = useState([]);
       setLoading(true);
       try {
         const response = await makeApi(`/api/products/search?word=${searchQuery}`, "GET");
-        setProducts(response.data.products);
+        // setProducts(response.data.products);
+        const sortedProducts = response.data.products.sort(
+          (a, b) => a.FinalPrice - b.FinalPrice
+        );
+
+        // Add default shop and price for products with shopPrices
+        const updatedProducts = sortedProducts.map((product) => {
+          if (product.shopPrices?.length > 0) {
+            product.defaultShop = product.shopPrices[0].shopname;
+            product.defaultPrice = product.shopPrices[0].price;
+            product.defaultFinalPrice = product.shopPrices[0].FinalPrice;
+          }
+          return product;
+        });
+
+        setProducts(updatedProducts);
         setIsSearchingProducts(true);
       } catch (error) {
         console.log("Error fetching products:", error);
@@ -118,33 +146,44 @@ const [topsall, setTopsall] = useState([]);
     );
   };
 
-  const handleAddToCart = (product) => {
-    setCart((prevCart) => {
-      const updatedCart = { ...prevCart };
-      const existingProduct = prevCart[product._id];
-
-      if (!existingProduct) {
-        updatedCart[product._id] = {
-          ...product,
-          quantity: product.minorderquantity || 1,
-        };
-      }
-
-      return updatedCart;
-    });
+  // const handleAddToCart = (product, selectedShop) => {
+  //   const shopDetails = product.shopPrices.find(
+  //     (shop) => shop.shopname === selectedShop
+  //   );
+  //   setCart((prevCart) => ({
+  //     ...prevCart,
+  //     [product._id]: {
+  //       ...product,
+  //       shop: selectedShop,
+  //       FinalPrice: shopDetails?.price || product.FinalPrice,
+  //       quantity: product.minorderquantity || 1,
+  //     },
+  //   }));
+  // };
+  const handleAddToCart = (product, selectedShop) => {
+    const shopDetails = product.shopPrices.find(
+      (shop) => shop.shopname === selectedShop
+    );
+    setCart((prevCart) => ({
+      ...prevCart,
+      [product._id]: {
+        ...product,
+        shop: selectedShop,
+        FinalPrice: shopDetails?.FinalPrice || product.defaultFinalPrice || product.FinalPrice,
+        price: shopDetails?.price || product.defaultPrice || product.price,
+        quantity: product.minorderquantity || 1,
+      },
+    }));
   };
 
   const handleIncreaseQuantity = (product) => {
-    setCart((prevCart) => {
-      const updatedCart = {
-        ...prevCart,
-        [product._id]: {
-          ...product,
-          quantity: (prevCart[product._id]?.quantity || 0) + 1,
-        },
-      };
-      return updatedCart;
-    });
+    setCart((prevCart) => ({
+      ...prevCart,
+      [product._id]: {
+        ...prevCart[product._id],
+        quantity: prevCart[product._id].quantity + 1,
+      },
+    }));
   };
 
   const handleDecreaseQuantity = (product) => {
@@ -152,6 +191,7 @@ const [topsall, setTopsall] = useState([]);
       const updatedCart = { ...prevCart };
       const existingProduct = prevCart[product._id];
 
+      // Prevent quantity from going below minorderquantity
       if (existingProduct.quantity > (product.minorderquantity || 1)) {
         updatedCart[product._id].quantity -= 1;
       } else {
@@ -166,88 +206,140 @@ const [topsall, setTopsall] = useState([]);
     setCart((prevCart) => {
       const updatedCart = { ...prevCart };
       delete updatedCart[productId];
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
       return updatedCart;
     });
   };
 
+  const handleShopChange = (product, selectedShop) => {
+    const shopDetails = product.shopPrices.find(
+      (shop) => shop.shopname === selectedShop
+    );
+    setCart((prevCart) => ({
+      ...prevCart,
+      [product._id]: {
+        ...prevCart[product._id],
+        shop: selectedShop,
+        FinalPrice: shopDetails?.FinalPrice || product.defaultFinalPrice || product.FinalPrice,
+        price: shopDetails?.price || product.defaultPrice || product.price,
+      },
+    }));
+  };
   return (
     <div className="all-services-page">
-       <div className="product-list">
-          {topsall.map((product) => (
-            <motion.div
-              className="product-card"
-              key={product._id}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <img
-                src={product.thumbnail.replace("http://", "https://")}
-                alt={product.name}
-                className="product-image"
-              />
-              <div className="product-info">
-                <h2 className="product-name">{product.name}</h2>
-                <p className="product-price">
-                  <span className="original-price">₹{product.price}</span>
-                  <span className="final-price">₹{product.FinalPrice}</span>
+      <div className="product-list">
+        {topsall.map((product) => (
+          <motion.div
+            className="product-card"
+            key={product._id}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <img
+              src={product.thumbnail.replace("http://", "https://")}
+              alt={product.name}
+              className="product-image"
+            />
+            <div className="product-info" style={{ textAlign: "left" }} >
+              <h2 className="product-name">{product.name}</h2>
+              {product.shopPrices?.length > 0 && (
+                <div>
+                  Shop name: <b>{cart[product._id]?.shop || product.defaultShop || "N/A"}</b>
+                </div>
+              )}
+
+              <p className="product-price">
+                <span className="original-price">
+                  ₹{cart[product._id]?.price || product.defaultPrice || product.price}
+                </span>
+                <span className="final-price">
+                  ₹{cart[product._id]?.FinalPrice || product.defaultFinalPrice || product.FinalPrice}
+                </span>
+              </p>
+              {product.minorderquantity && (
+                <p style={{ color: "red" }}>
+                  Min Order Quantity: {product.minorderquantity}
                 </p>
-                {product.minorderquantity && (
-                  <p style={{ color: "red" }}>
-                    Min Order Quantity: {product.minorderquantity}
-                  </p>
-                )}
-                <div className="product-actions">
+              )}
+              <div style={{ display: "flex", alignItems: "center" }} >
+                <div>
+                  {product.shopPrices?.length > 0 && (
+                    <div className="shop-selection">
+                      <span style={{ cursor: "pointer", color: "red", fontSize: "13px" }}>
+                        <div>
+                          change shop
+                        </div>
+                      </span>
+                      <select
+                        value={cart[product._id]?.shop || product.defaultShop}
+                        onChange={(e) =>
+                          cart[product._id]
+                            ? handleShopChange(product, e.target.value)
+                            : handleAddToCart(product, e.target.value)
+                        }
+                        className="product-actions-dropdown"
+                      >
+                        {product.shopPrices
+                          .sort((a, b) => a.poistionId - b.poistionId) // Sort based on positionId
+                          .map((shop) => (
+                            <option key={shop._id} value={shop.shopname}>
+                              {shop.shopname} - ₹{shop.FinalPrice}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  )}
+                </div>
+                <div>
                   {cart[product._id] ? (
-                    <>
-                      <div className="quantity-control">
-                        <motion.button
-                          className="quantity-btn decrease-btn"
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleDecreaseQuantity(product)}
+                    <div className="quantity-control"  >
+                      <div style={{marginBottom:"4px"}} >
+
+                      <motion.button
+                        className="quantity-btn decrease-btn"
+                        onClick={() => handleDecreaseQuantity(product)}
                         >
-                          -
-                        </motion.button>
-                        <motion.span
-                          className="quantity"
-                          key={cart[product._id].quantity}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ duration: 0.3 }}
+                        -
+                      </motion.button>
+                      <span className="quantity">
+                        {cart[product._id]?.quantity}
+                      </span>
+                      <motion.button
+                        className="quantity-btn increase-btn"
+                        onClick={() => handleIncreaseQuantity(product)}
                         >
-                          {cart[product._id].quantity}
-                        </motion.span>
-                        <motion.button
-                          className="quantity-btn increase-btn"
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleIncreaseQuantity(product)}
-                        >
-                          +
-                        </motion.button>
-                      </div>
+                        +
+                      </motion.button>
+                        </div>
+                        <div>
+
                       <motion.button
                         className="remove-btn"
-                        whileTap={{ scale: 0.9 }}
                         onClick={() => clearFromCart(product._id)}
-                      >
+                        >
                         Remove
                       </motion.button>
-                    </>
+                        </div>
+                    </div>
                   ) : (
                     <motion.button
                       className="add-to-cart-btn"
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => handleAddToCart(product)}
+                      onClick={() =>
+                        handleAddToCart(
+                          product,
+                          product.defaultShop || product.shopPrices[0]?.shopname
+                        )
+                      }
                     >
                       Add to Cart
                     </motion.button>
                   )}
                 </div>
               </div>
-            </motion.div>
-          ))}
-        </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
       <div className="search-container">
         <input
           type="text"
@@ -280,61 +372,88 @@ const [topsall, setTopsall] = useState([]);
               />
               <div className="product-info">
                 <h2 className="product-name">{product.name}</h2>
+                {product.shopPrices?.length > 0 && (
+                  <div>
+                    Shop name: <b>{cart[product._id]?.shop || product.defaultShop || "N/A"}</b>
+                  </div>
+                )}
+
                 <p className="product-price">
-                  <span className="original-price">₹{product.price}</span>
-                  <span className="final-price">₹{product.FinalPrice}</span>
+                  <span className="original-price">
+                    ₹{cart[product._id]?.price || product.defaultPrice || product.price}
+                  </span>
+                  <span className="final-price">
+                    ₹{cart[product._id]?.FinalPrice || product.defaultFinalPrice || product.FinalPrice}
+                  </span>
                 </p>
                 {product.minorderquantity && (
                   <p style={{ color: "red" }}>
                     Min Order Quantity: {product.minorderquantity}
                   </p>
                 )}
-                <div className="product-actions">
-                  {cart[product._id] ? (
-                    <>
-                      <div className="quantity-control">
-                        <motion.button
-                          className="quantity-btn decrease-btn"
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleDecreaseQuantity(product)}
-                        >
-                          -
-                        </motion.button>
-                        <motion.span
-                          className="quantity"
-                          key={cart[product._id].quantity}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          {cart[product._id].quantity}
-                        </motion.span>
-                        <motion.button
-                          className="quantity-btn increase-btn"
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleIncreaseQuantity(product)}
-                        >
-                          +
-                        </motion.button>
+                {product.shopPrices?.length > 0 && (
+                  <div className="shop-selection">
+                    <span style={{ cursor: "pointer", color: "red", fontSize: "13px" }}>
+                      <div>
+                        change shop
                       </div>
-                      <motion.button
-                        className="remove-btn"
-                        whileTap={{ scale: 0.9 }}
-                        onClick={() => clearFromCart(product._id)}
-                      >
-                        Remove
-                      </motion.button>
-                    </>
-                  ) : (
-                    <motion.button
-                      className="add-to-cart-btn"
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => handleAddToCart(product)}
+                    </span>
+                    <select
+                      value={cart[product._id]?.shop || product.defaultShop}
+                      onChange={(e) =>
+                        cart[product._id]
+                          ? handleShopChange(product, e.target.value)
+                          : handleAddToCart(product, e.target.value)
+                      }
+                      className="product-actions-dropdown"
                     >
-                      Add to Cart
+                      {product.shopPrices
+                        .sort((a, b) => a.poistionId - b.poistionId) // Sort based on positionId
+                        .map((shop) => (
+                          <option key={shop._id} value={shop.shopname}>
+                            {shop.shopname} - ₹{shop.FinalPrice}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                )}
+                {cart[product._id] ? (
+                  <div className="quantity-control">
+                    <motion.button
+                      className="quantity-btn decrease-btn"
+                      onClick={() => handleDecreaseQuantity(product)}
+                    >
+                      -
                     </motion.button>
-                  )}
-                </div>
+                    <span className="quantity">
+                      {cart[product._id]?.quantity}
+                    </span>
+                    <motion.button
+                      className="quantity-btn increase-btn"
+                      onClick={() => handleIncreaseQuantity(product)}
+                    >
+                      +
+                    </motion.button>
+                    <motion.button
+                      className="remove-btn"
+                      onClick={() => clearFromCart(product._id)}
+                    >
+                      Remove
+                    </motion.button>
+                  </div>
+                ) : (
+                  <motion.button
+                    className="add-to-cart-btn"
+                    onClick={() =>
+                      handleAddToCart(
+                        product,
+                        product.defaultShop || product.shopPrices[0]?.shopname
+                      )
+                    }
+                  >
+                    Add to Cart
+                  </motion.button>
+                )}
               </div>
             </motion.div>
           ))}
@@ -377,29 +496,15 @@ const [topsall, setTopsall] = useState([]);
             exit={{ opacity: 0, y: 100 }}
             transition={{ duration: 0.4 }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between" }} >
-
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div className="cart-title-popup">Cart</div>
-              <div>
-
-                <motion.button
-                  className="clear-cart-btn"
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => clearCart()}
-                  style={{
-                    marginTop: "10px",
-                    backgroundColor: "#e74c3c",
-                    color: "#fff",
-                    border: "none",
-                    padding: "5px 5px",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                    fontSize: "13px",
-                  }}
-                >
-                  Clear
-                </motion.button>
-              </div>
+              <motion.button
+                className="clear-cart-btn"
+                whileTap={{ scale: 0.9 }}
+                onClick={clearCart}
+              >
+                Clear
+              </motion.button>
             </div>
             <ul className="cart-items">
               {Object.values(cart).map((item) => (
@@ -410,7 +515,8 @@ const [topsall, setTopsall] = useState([]);
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.8 }}
                 >
-                  {item.name} x {item.quantity} = ₹{item.FinalPrice * item.quantity}
+                  {item.name} from <b>{item.shop}</b> x {item.quantity} = ₹
+                  {item.FinalPrice * item.quantity}
                   <motion.button
                     className="remove-btn-mini"
                     whileTap={{ scale: 0.9 }}
@@ -433,7 +539,6 @@ const [topsall, setTopsall] = useState([]);
               <Link to="/cart" style={{ textDecoration: "none" }}>
                 <button className="buy-now-btn">Buy Now</button>
               </Link>
-
             </div>
           </motion.div>
         )}
