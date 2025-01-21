@@ -494,7 +494,7 @@ function CategoryPage() {
           <div className="product-list">
             {products.map((product) => (
               <motion.div
-                className="product-card"
+                className="product-card closed"
                 key={product._id}
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -507,6 +507,11 @@ function CategoryPage() {
                 />
                 <div className="product-info">
                   <h2 className="product-name">{product.name}</h2>
+                  <span style={{ cursor: "pointer", color: "red", fontSize: "15px" }}>
+                    <div>
+                      this is service is not Available at current time
+                    </div>
+                  </span>
                   {product.shopPrices?.length > 0 && (
                     <div>
                       Shop name: <b>{cart[product._id]?.shop || product.defaultShop || "N/A"}</b>
@@ -531,6 +536,7 @@ function CategoryPage() {
                       <span style={{ cursor: "pointer", color: "red", fontSize: "13px" }}>
                         <div>
                           change shop
+                          {/* this is service is not Available at current time  */}
                         </div>
                       </span>
                       <select
