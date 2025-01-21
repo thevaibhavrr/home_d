@@ -364,7 +364,7 @@ function AllServicesPage() {
         <div className="product-list">
           {products.map((product) => (
             <motion.div
-              className="product-card"
+              className="product-card closed"
               key={product._id}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
