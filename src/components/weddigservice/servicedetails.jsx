@@ -507,11 +507,11 @@ function CategoryPage() {
                 />
                 <div className="product-info">
                   <h2 className="product-name">{product.name}</h2>
-                  {/* <span style={{ cursor: "pointer", color: "red", fontSize: "15px" }}>
+                  <span style={{ cursor: "pointer", color: "red", fontSize: "15px" }}>
                     <div>
                       this is service is not Available at current time
                     </div>
-                  </span> */}
+                  </span>
                   {product.shopPrices?.length > 0 && (
                     <div>
                       Shop name: <b>{cart[product._id]?.shop || product.defaultShop || "N/A"}</b>
