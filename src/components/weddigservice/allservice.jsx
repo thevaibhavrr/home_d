@@ -229,7 +229,7 @@ function AllServicesPage() {
       <div className="product-list">
         {topsall.map((product) => (
           <motion.div
-            className="product-card closed"
+            className="product-card "
             key={product._id}
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -242,11 +242,11 @@ function AllServicesPage() {
             />
             <div className="product-info" style={{ textAlign: "left" }} >
               <h2 className="product-name">{product.name}</h2>
-              <span style={{ cursor: "pointer", color: "red", fontSize: "15px" }}>
+              {/* <span style={{ cursor: "pointer", color: "red", fontSize: "15px" }}>
                     <div>
                       this is service is not Available at current time
                     </div>
-                  </span>
+                  </span> */}
               {product.shopPrices?.length > 0 && (
                 <div>
                   Shop name: <b>{cart[product._id]?.shop || product.defaultShop || "N/A"}</b>
@@ -364,7 +364,7 @@ function AllServicesPage() {
         <div className="product-list">
           {products.map((product) => (
             <motion.div
-              className="product-card closed"
+              className="product-card"
               key={product._id}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
