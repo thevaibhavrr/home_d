@@ -236,7 +236,7 @@ function AllServicesPage() {
             transition={{ duration: 0.3 }}
           >
             <img
-              src={product.thumbnail.replace("http://", "https://")}
+              src={product.thumbnail}
               alt={product.name}
               className="product-image"
             />
@@ -371,7 +371,7 @@ function AllServicesPage() {
               transition={{ duration: 0.3 }}
             >
               <img
-                src={product.thumbnail.replace("http://", "https://")}
+                src={product.thumbnail}
                 alt={product.name}
                 className="product-image"
               />
@@ -478,7 +478,7 @@ function AllServicesPage() {
                 className="service-link"
               >
                 <img
-                  src={service.image.replace("http://", "https://")}
+                  src={service.image}
                   alt={service.name}
                   className="service-image"
                 />

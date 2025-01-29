@@ -501,7 +501,7 @@ function CategoryPage() {
                 transition={{ duration: 0.3 }}
               >
                 <img
-                  src={product.thumbnail.replace("http://", "https://")}
+                  src={product.thumbnail}
                   alt={product.name}
                   className="product-image"
                 />
