@@ -147,7 +147,6 @@ const CartPage = () => {
         SingelProductPrice: product.FinalPrice,
         FinalPrice: product.FinalPrice * product.quantity,
         thumbnail: product.thumbnail,
-
       })),
       createdAt: new Date().toISOString(),
       totalAmount: totalCartValue,
