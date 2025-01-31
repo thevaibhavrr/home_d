@@ -527,7 +527,7 @@ function CategoryPage() {
                     </span>
                   </p>
                   {product.minorderquantity && (
-                    <p style={{ color: "red" }}>
+                    <p style={{ color: "red" }} className="min_order_quantity_text" >
                       Min Order Quantity: {product.minorderquantity}
                     </p>
                   )}
