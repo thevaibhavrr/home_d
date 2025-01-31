@@ -469,9 +469,9 @@ function AllServicesPage() {
             <motion.div
               className="service-card"
               key={service._id}
-              initial={{ scale: 0.8, y: 100 }}
-              animate={{ scale: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+              initial={{ scale: 0.8, y: 100, opecity: 0 }}
+              whileInView={{ scale: 1, y: 0 , opecity: 1}}
+              transition={{ duration: 0.3  }}
             >
               <Link
                 to={`/category/${service.name.toLowerCase()}`}
