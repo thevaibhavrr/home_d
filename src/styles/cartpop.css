@@ -2,7 +2,7 @@
 /* Mini Cart Popup */
 .mini-cart {
     position: fixed;
-    bottom: 20px;
+    bottom: 60px;
     right: 20px;
     background-color: #fff;
     border: 1px solid var(--border-color);

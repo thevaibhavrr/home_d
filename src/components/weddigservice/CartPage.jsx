@@ -90,8 +90,21 @@ const CartPage = () => {
   };
 
   const handleAddAddress = () => {
-    if (!mobileNumber || !userName || !address || !village) {
-      toast.error("Please fill in all fields!"); // Show error toast message if name or mobile number is empty
+    // if (!mobileNumber || !userName || !address || !village) {
+    if (!mobileNumber ) {
+      toast.error("please enter mobile number");
+      return;
+    }
+     if (!address) {
+      toast.error("please enter address");
+      return;
+    }
+     if (!userName) {
+      toast.error("please enter name");
+      return;
+    }
+     if (!village) {
+      toast.error("please enter village");
       return;
     }
 

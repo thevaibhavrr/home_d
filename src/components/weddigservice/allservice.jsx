@@ -6,6 +6,7 @@ import "../../styles/cartpop.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { makeApi } from "../../api/callApi";
 import Loader from "../../components/loader/loader";
+import FooterBar from "../footrt/FooterBar";
 
 function AllServicesPage() {
   const [categories, setCategories] = useState([]);
@@ -19,16 +20,39 @@ function AllServicesPage() {
   const [topsall, setTopsall] = useState([]);
 
   // Fetch categories on mount
+  // useEffect(() => {
+  //   async function fetchCategories() {
+  //     setLoading(true);
+  //     try {
+
+  //       const response = await makeApi("/api/get-all-categories", "GET");
+
+  //       // Sort categories by position
+  //       const sortedCategories = response.data.sort((a, b) => a.poistionId - b.poistionId);
+
+  //       setCategories(sortedCategories);
+  //       setFilteredCategories(sortedCategories); // Initially display all categories
+  //     } catch (error) {
+  //       console.log("Error fetching categories:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+
+  //   fetchCategories();
+  // }, []);
   useEffect(() => {
     async function fetchCategories() {
       setLoading(true);
       try {
-
         const response = await makeApi("/api/get-all-categories", "GET");
-
-        // Sort categories by position
-        const sortedCategories = response.data.sort((a, b) => a.poistionId - b.poistionId);
-
+  
+        // Filter out categories with type 'shop'
+        const filteredCategories = response.data.filter(category => category.type !== 'shop');
+  
+        // Sort the remaining categories by positionId
+        const sortedCategories = filteredCategories.sort((a, b) => a.poistionId - b.poistionId);
+  
         setCategories(sortedCategories);
         setFilteredCategories(sortedCategories); // Initially display all categories
       } catch (error) {
@@ -37,9 +61,10 @@ function AllServicesPage() {
         setLoading(false);
       }
     }
-
+  
     fetchCategories();
   }, []);
+  
   useEffect(() => {
     async function fetchCategories() {
       setLoading(true);
@@ -551,6 +576,7 @@ function AllServicesPage() {
           </motion.div>
         )}
       </AnimatePresence>
+      <FooterBar/>
       <div style={{ height: "60vh" }} ></div>
 
     </div>
