@@ -270,7 +270,7 @@ function AllServicesPage() {
                 <div>
                   {product.shopPrices?.length > 0 && (
                     <div className="shop-selection">
-                      <span style={{ cursor: "pointer", color: "red", fontSize: "13px" }}>
+                      <span style={{ cursor: "pointer", color: "red", fontSize: "16px" }}>
                         <div>
                           change shop
                         </div>
@@ -298,33 +298,33 @@ function AllServicesPage() {
                 <div>
                   {cart[product._id] ? (
                     <div className="quantity-control"  >
-                      <div style={{marginBottom:"4px"}} >
+                      <div style={{ marginBottom: "4px" }} >
 
-                      <motion.button
-                        className="quantity-btn decrease-btn"
-                        onClick={() => handleDecreaseQuantity(product)}
+                        <motion.button
+                          className="quantity-btn decrease-btn"
+                          onClick={() => handleDecreaseQuantity(product)}
                         >
-                        -
-                      </motion.button>
-                      <span className="quantity">
-                        {cart[product._id]?.quantity}
-                      </span>
-                      <motion.button
-                        className="quantity-btn increase-btn"
-                        onClick={() => handleIncreaseQuantity(product)}
+                          -
+                        </motion.button>
+                        <span className="quantity">
+                          {cart[product._id]?.quantity}
+                        </span>
+                        <motion.button
+                          className="quantity-btn increase-btn"
+                          onClick={() => handleIncreaseQuantity(product)}
                         >
-                        +
-                      </motion.button>
-                        </div>
-                        <div>
+                          +
+                        </motion.button>
+                      </div>
+                      <div>
 
-                      <motion.button
-                        className="remove-btn"
-                        onClick={() => clearFromCart(product._id)}
+                        <motion.button
+                          className="remove-btn"
+                          onClick={() => clearFromCart(product._id)}
                         >
-                        Remove
-                      </motion.button>
-                        </div>
+                          Remove
+                        </motion.button>
+                      </div>
                     </div>
                   ) : (
                     <motion.button
@@ -398,7 +398,7 @@ function AllServicesPage() {
                 )}
                 {product.shopPrices?.length > 0 && (
                   <div className="shop-selection">
-                    <span style={{ cursor: "pointer", color: "red", fontSize: "13px" }}>
+                    <span style={{ cursor: "pointer", color: "red", fontSize: "16px" }}>
                       <div>
                         change shop
                       </div>
@@ -470,8 +470,8 @@ function AllServicesPage() {
               className="service-card"
               key={service._id}
               initial={{ scale: 0.8, y: 100, opecity: 0 }}
-              whileInView={{ scale: 1, y: 0 , opecity: 1}}
-              transition={{ duration: 0.3  }}
+              whileInView={{ scale: 1, y: 0, opecity: 1 }}
+              transition={{ duration: 0.3 }}
             >
               <Link
                 to={`/category/${service.name.toLowerCase()}`}
