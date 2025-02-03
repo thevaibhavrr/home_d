@@ -106,6 +106,17 @@
   transition: color 0.3s;
 }
 
+
+/* shop */
+.shop_main_div{
+  margin-top: 50px;
+  border-top: 5px solid var(--primary-color);
+  padding-top: 30px;
+}
+.shop_name_tag{
+  
+}
+
 /* Mobile-specific adjustments */
 @media (max-width: 767px) {
   .services-container {

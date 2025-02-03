@@ -16,6 +16,7 @@ const CartPage = () => {
   const [userName, setUserName] = useState(""); // State for user's name
   const [isMobileValid, setIsMobileValid] = useState(true); // To track mobile validation
   const [selectedAddress, setSelectedAddress] = useState(null); // Track selected address
+  const [village, setVillage] = useState("");
   const [orderDetails, setOrderDetails] = useState(null); // State to hold order details for thank-you popup
   const [showThankYouPopup, setShowThankYouPopup] = useState(false); // To control the visibility of the Thank You popup
   const [isLoading, setIsLoading] = useState(false); // State for loader
@@ -96,13 +97,14 @@ const CartPage = () => {
 
     if (mobileNumber.length === 10 && address.trim() && userName.trim()) {
       // Address is valid, save it
-      const updatedAddresses = [...addresses, { userName, mobileNumber, address }];
+      const updatedAddresses = [...addresses, { userName, mobileNumber, address,village }];
       setAddresses(updatedAddresses);
       localStorage.setItem("addresses", JSON.stringify(updatedAddresses));
-      setMobileNumber(""); // Clear mobile number input
-      setAddress(""); // Clear address input
-      setUserName(""); // Clear user name input
-      setShowAddAddressPopup(false); // Close the popup
+      setMobileNumber(""); 
+      setAddress(""); 
+      setUserName(""); 
+      setVillage("");
+      setShowAddAddressPopup(false); 
     } else {
       toast.error("Please enter a valid mobile number, address, and name.");
     }
@@ -111,11 +113,11 @@ const CartPage = () => {
   const handleMobileChange = (e) => {
     const value = e.target.value;
     setMobileNumber(value);
-    setIsMobileValid(value.length === 10); // Check if the mobile number is valid
+    setIsMobileValid(value.length === 10);
   };
 
   const handleSelectAddress = (selected) => {
-    setSelectedAddress(selected); // Update selected address
+    setSelectedAddress(selected);
   };
 
   const totalCartValue = cart.reduce(
@@ -126,19 +128,20 @@ const CartPage = () => {
   // Function to handle order placement
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
-      toast.error("Please select an address!"); // Show toast if no address is selected
+      toast.error("Please select an address!");
       return;
     }
 
 
 
-    setIsLoading(true); // Show the loader
-    setIsButtonDisabled(true); // Disable the button after clicking
+    setIsLoading(true);
+    setIsButtonDisabled(true);
 
     const orderData = {
-      username: selectedAddress.userName, // Use the selected address's username
+      username: selectedAddress.userName,
       address: selectedAddress.address,
       mobileNumber: selectedAddress.mobileNumber,
+      village: selectedAddress.village,
       products: cart.map((product) => ({
         productId: product._id,  // Use _id
         name: product.name,
@@ -153,9 +156,9 @@ const CartPage = () => {
     };
 
     const handleDeleteAddress = (index) => {
-      const updatedAddresses = addresses.filter((_, i) => i !== index); // Remove the address at the given index
-      setAddresses(updatedAddresses); // Update state
-      localStorage.setItem("addresses", JSON.stringify(updatedAddresses)); // Update local storage
+      const updatedAddresses = addresses.filter((_, i) => i !== index); 
+      setAddresses(updatedAddresses); 
+      localStorage.setItem("addresses", JSON.stringify(updatedAddresses)); 
 
       // If the deleted address was selected, reset the selected address
       if (selectedAddress === addresses[index]) {
@@ -307,20 +310,7 @@ const CartPage = () => {
             <h2 className="section-title">Select Address</h2>
             {addresses.length > 0 ? (
               <div className="address-list">
-                {/* {addresses.map((address, index) => (
-                  <div className="address-item" key={index}>
-                    <input
-                      type="radio"
-                      name="address"
-                      id={`address-${index}`}
-                      checked={selectedAddress && selectedAddress.address === address.address} 
-                      onChange={() => handleSelectAddress(address)} // Update selected address
-                    />
-                    <label htmlFor={`address-${index}`}>
-                      {address.userName} - {address.mobileNumber}, {address.address}
-                    </label>
-                  </div>
-                ))} */}
+                
                 {addresses.map((address, index) => (
                   <div className="address-item" key={index}>
                     <input
@@ -331,7 +321,7 @@ const CartPage = () => {
                       onChange={() => handleSelectAddress(address)} // Update selected address
                     />
                     <label htmlFor={`address-${index}`}>
-                      {address.userName} - {address.mobileNumber}, {address.address}
+                      {address.userName} - {address.mobileNumber}, {address.address} - {address.village}
                     </label>
                     <button
                       className="delete-address-btn"
@@ -381,6 +371,14 @@ const CartPage = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 50 }}
         >
+          <input
+            type="text"
+            placeholder="Enter your village"
+            value={village}
+            onChange={(e) => setVillage(e.target.value)}
+            className="input-field-for-address"
+            required
+          />
           <input
             type="text"
             placeholder="Enter your name"

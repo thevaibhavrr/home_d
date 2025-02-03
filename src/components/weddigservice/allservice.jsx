@@ -464,6 +464,7 @@ function AllServicesPage() {
           ))}
         </div>
       ) : (
+        <>
         <div className="services-container">
           {filteredCategories.map((service) => (
             <motion.div
@@ -489,6 +490,8 @@ function AllServicesPage() {
             </motion.div>
           ))}
         </div>
+
+        </>
       )}
 
       {/* Mini Cart Popup */}
