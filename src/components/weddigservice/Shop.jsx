@@ -25,8 +25,8 @@ function Allshoppage() {
       setLoading(true);
       try {
 
-        const response = await makeApi("/api/get-all-categories-shop", "GET");
-
+        const response = await makeApi("/api/get-all-categories-shop-for-user", "GET");
+        
         // Sort categories by position
         const sortedCategories = response.data.sort((a, b) => a.poistionId - b.poistionId);
 
