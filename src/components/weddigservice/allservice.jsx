@@ -576,7 +576,7 @@ function AllServicesPage() {
           </motion.div>
         )}
       </AnimatePresence>
-      {/* <FooterBar/> */}
+      <FooterBar/>
       <div style={{ height: "60vh" }} ></div>
 
     </div>

@@ -24,10 +24,7 @@
     transition: color 0.3s ease-in-out;
     letter-spacing: 1px;
   }
-  
-  .footer-link:hover {
-    color: var(--hover-color);
-  }
+
   
   .footer-icon {
     display: flex;
@@ -35,7 +32,5 @@
     align-items: center;
   }
   
-  /* .footer-text {
-    margin-top: 5px;
-  } */
+
   
