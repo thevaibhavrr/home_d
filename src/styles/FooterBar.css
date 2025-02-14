@@ -19,10 +19,12 @@
     flex-direction: column;
     align-items: center;
     color: #fff;
-    font-family: var(--font-family);
+    font-family: (--font-family); 
     font-size: 0.8rem;
     transition: color 0.3s ease-in-out;
     letter-spacing: 1px;
+    width: 100%;
+    padding: 5px;
   }
 
   
@@ -33,4 +35,10 @@
   }
   
 
-  
+  .footer-link.active {
+    color: rgb(0, 0, 0);
+    width: 100%;
+    font-weight: bolder; /* Optional: Add bold text for the active link */
+    background: #e7e6e650;
+    border-radius: 10px;
+  }

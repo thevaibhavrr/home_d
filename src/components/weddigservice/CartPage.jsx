@@ -18,6 +18,7 @@ const CartPage = () => {
   const [selectedAddress, setSelectedAddress] = useState(null); // Track selected address
   const [village, setVillage] = useState("");
   const [orderDetails, setOrderDetails] = useState(null); // State to hold order details for thank-you popup
+  console.log(orderDetails);
   const [showThankYouPopup, setShowThankYouPopup] = useState(false); // To control the visibility of the Thank You popup
   const [isLoading, setIsLoading] = useState(false); // State for loader
   const [isButtonDisabled, setIsButtonDisabled] = useState(false); // State to disable the button
@@ -104,7 +105,7 @@ const CartPage = () => {
       return;
     }
      if (!village) {
-      toast.error("please enter village");
+      toast.error("please enter village (गाँव)");
       return;
     }
 
@@ -386,7 +387,7 @@ const CartPage = () => {
         >
           <input
             type="text"
-            placeholder="Enter your village"
+            placeholder="Enter your village (गाँव)"
             value={village}
             onChange={(e) => setVillage(e.target.value)}
             className="input-field-for-address"
@@ -394,14 +395,14 @@ const CartPage = () => {
           />
           <input
             type="text"
-            placeholder="Enter your name"
+            placeholder="Enter your name (नाम)"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             className="input-field-for-address"
           />
           <input
             type="text"
-            placeholder="Enter your mobile number"
+            placeholder="Enter your mobile number (नंबर)"
             value={mobileNumber}
             onChange={handleMobileChange}
             maxLength="14"
@@ -415,7 +416,7 @@ const CartPage = () => {
           )}
 
           <textarea
-            placeholder="Enter your new address"
+            placeholder="Enter your new address (पता)"
             value={address}
             className="input-field-for-address"
             onChange={(e) => setAddress(e.target.value)}
@@ -455,7 +456,7 @@ const CartPage = () => {
                 <div className="order-item-info">
                   <span className="order-item-quantity">Quantity: {product.quantity}</span>
                   <span className="order-item-name">{product.name}</span>
-                  <span className="order-item-price">₹{product.FinalPrice * product.quantity}</span>
+                  <span className="order-item-price">₹{product.SingelProductPrice * product.quantity}</span>
                 </div>
               </li>
             ))}

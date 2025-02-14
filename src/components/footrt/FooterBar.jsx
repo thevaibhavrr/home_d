@@ -1,18 +1,81 @@
+// import React from "react";
+// import { Link } from "react-router-dom";
+// import "../../styles/FooterBar.css";
+// import { motion } from "framer-motion";
+
+// function FooterBar() {
+//   return (
+//     <div className="footer-bar">
+//       <Link to="/" className="footer-link">
+//         <motion.div
+//           className="footer-icon"
+//           whileHover={{ scale: 1.2 }} // Scale the icon on hover
+//           whileTap={{ scale: 0.9 }}   // Slightly shrink when clicked
+//         >
+//           <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" className="bi bi-bag" viewBox="0 0 16 16">
+//             <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" />
+//           </svg>
+//         </motion.div>
+//         <motion.span
+//           className="footer-text"
+//           initial={{ opacity: 0 }}
+//           animate={{ opacity: 1 }}
+//           transition={{ delay: 0.2, duration: 0.3 }}
+//         >
+//           Service
+//         </motion.span>
+//       </Link>
+//       <Link to="/shops" className="footer-link">
+//         <motion.div
+//           className="footer-icon"
+//           whileHover={{ scale: 1.2 }}
+//           whileTap={{ scale: 0.9 }}
+//         >
+//           <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" className="bi bi-house" viewBox="0 0 16 16">
+//             <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
+//           </svg>
+//         </motion.div>
+//         <motion.span
+//           className="footer-text"
+//           initial={{ opacity: 0 }}
+//           animate={{ opacity: 1 }}
+//           transition={{ delay: 0.2, duration: 0.3 }}
+//         >
+//           Shop
+//         </motion.span>
+//       </Link>
+//     </div>
+//   );
+// }
+
+// export default FooterBar;
+
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom"; // Use NavLink instead of Link
 import "../../styles/FooterBar.css";
 import { motion } from "framer-motion";
 
 function FooterBar() {
   return (
     <div className="footer-bar">
-      <Link to="/" className="footer-link">
+      <NavLink
+        to="/"
+        className="footer-link"
+        activeClassName="active" // Add activeClassName
+      >
         <motion.div
           className="footer-icon"
-          whileHover={{ scale: 1.2 }} // Scale the icon on hover
-          whileTap={{ scale: 0.9 }}   // Slightly shrink when clicked
+          whileHover={{ scale: 1.2 }}
+          whileTap={{ scale: 0.9 }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" className="bi bi-bag" viewBox="0 0 16 16">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="23"
+            height="23"
+            fill="currentColor"
+            className="bi bi-bag"
+            viewBox="0 0 16 16"
+          >
             <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" />
           </svg>
         </motion.div>
@@ -24,14 +87,25 @@ function FooterBar() {
         >
           Service
         </motion.span>
-      </Link>
-      <Link to="/shops" className="footer-link">
+      </NavLink>
+      <NavLink
+        to="/shops"
+        className="footer-link"
+        activeClassName="active" // Add activeClassName
+      >
         <motion.div
           className="footer-icon"
           whileHover={{ scale: 1.2 }}
           whileTap={{ scale: 0.9 }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" className="bi bi-house" viewBox="0 0 16 16">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="23"
+            height="23"
+            fill="currentColor"
+            className="bi bi-house"
+            viewBox="0 0 16 16"
+          >
             <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
           </svg>
         </motion.div>
@@ -43,7 +117,7 @@ function FooterBar() {
         >
           Shop
         </motion.span>
-      </Link>
+      </NavLink>
     </div>
   );
 }
