@@ -362,7 +362,7 @@ const CartPage = () => {
 
           <div className="delivery-section">
             <h2 className="section-title">Delivery</h2>
-            <p className="delivery-charge">Delivery Charges: <b> Free</b></p>
+            {/* <p className="delivery-charge">Delivery Charges: <b> Free</b></p> */}
             <p className="total-cart-value">Total Amount: ₹{totalCartValue}</p>
 
           </div>
