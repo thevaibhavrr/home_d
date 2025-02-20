@@ -358,37 +358,6 @@ function CategoryPage() {
   }, [isInitialLoad]);
 
   // Fetch category products
-  // useEffect(() => {
-  //   async function fetchCategories() {
-  //     setLoading(true);
-  //     try {
-  //       const response = await makeApi(
-  //         `/api/get-products-by-service-id/${category}`,
-  //         "GET"
-  //       );
-  //       const sortedProducts = response.data.products.sort(
-  //         (a, b) => a.FinalPrice - b.FinalPrice
-  //       );
-
-  //       // Add default shop and price for products with shopPrices
-  //       const updatedProducts = sortedProducts.map((product) => {
-  //         if (product.shopPrices?.length > 0) {
-  //           product.defaultShop = product.shopPrices[0].shopname;
-  //           product.defaultPrice = product.shopPrices[0].price;
-  //           product.defaultFinalPrice = product.shopPrices[0].FinalPrice;
-  //         }
-  //         return product;
-  //       });
-
-  //       setProducts(updatedProducts);
-  //     } catch (error) {
-  //       console.error("Error fetching categories:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-  //   fetchCategories();
-  // }, [category]);
   useEffect(() => {
     async function fetchCategories() {
       setLoading(true);
@@ -400,22 +369,17 @@ function CategoryPage() {
         const sortedProducts = response.data.products.sort(
           (a, b) => a.FinalPrice - b.FinalPrice
         );
-  
-        // Add default shop and price for products with active shopPrices only
+
+        // Add default shop and price for products with shopPrices
         const updatedProducts = sortedProducts.map((product) => {
           if (product.shopPrices?.length > 0) {
-            // Filter out shopPrices with active: false
-            const activeShopPrices = product.shopPrices.filter(shop => shop.active === "true");
-  
-            if (activeShopPrices.length > 0) {
-              product.defaultShop = activeShopPrices[0].shopname;
-              product.defaultPrice = activeShopPrices[0].price;
-              product.defaultFinalPrice = activeShopPrices[0].FinalPrice;
-            }
+            product.defaultShop = product.shopPrices[0].shopname;
+            product.defaultPrice = product.shopPrices[0].price;
+            product.defaultFinalPrice = product.shopPrices[0].FinalPrice;
           }
           return product;
         });
-  
+
         setProducts(updatedProducts);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -423,10 +387,8 @@ function CategoryPage() {
         setLoading(false);
       }
     }
-  
     fetchCategories();
   }, [category]);
-  
 
   // Load cart from localStorage on component mount
   useEffect(() => {
