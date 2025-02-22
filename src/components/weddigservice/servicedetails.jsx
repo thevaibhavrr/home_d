@@ -12,6 +12,7 @@
 //   const [loading, setLoading] = useState(false);
 //   const [cart, setCart] = useState({});
 //   const [isInitialLoad, setIsInitialLoad] = useState(true);
+//   const [searchQuery, setSearchQuery] = useState("");
 
 //   useEffect(() => {
 //     if (isInitialLoad) {
@@ -38,6 +39,7 @@
 //           if (product.shopPrices?.length > 0) {
 //             product.defaultShop = product.shopPrices[0].shopname;
 //             product.defaultPrice = product.shopPrices[0].price;
+//             product.defaultFinalPrice = product.shopPrices[0].FinalPrice;
 //           }
 //           return product;
 //         });
@@ -86,7 +88,8 @@
 //       [product._id]: {
 //         ...product,
 //         shop: selectedShop,
-//         FinalPrice: shopDetails?.price || product.FinalPrice,
+//         FinalPrice: shopDetails?.FinalPrice || product.defaultFinalPrice || product.FinalPrice,
+//         price: shopDetails?.price || product.defaultPrice || product.price,
 //         quantity: product.minorderquantity || 1,
 //       },
 //     }));
@@ -101,7 +104,8 @@
 //       [product._id]: {
 //         ...prevCart[product._id],
 //         shop: selectedShop,
-//         FinalPrice: shopDetails?.price || product.FinalPrice,
+//         FinalPrice: shopDetails?.FinalPrice || product.defaultFinalPrice || product.FinalPrice,
+//         price: shopDetails?.price || product.defaultPrice || product.price,
 //       },
 //     }));
 //   };
@@ -116,18 +120,6 @@
 //     }));
 //   };
 
-//   // const handleDecreaseQuantity = (product) => {
-//   //   setCart((prevCart) => {
-//   //     const updatedCart = { ...prevCart };
-//   //     const existingProduct = prevCart[product._id];
-//   //     if (existingProduct.quantity > 1) {
-//   //       updatedCart[product._id].quantity -= 1;
-//   //     } else {
-//   //       delete updatedCart[product._id];
-//   //     }
-//   //     return updatedCart;
-//   //   });
-//   // };
 //   const handleDecreaseQuantity = (product) => {
 //     setCart((prevCart) => {
 //       const updatedCart = { ...prevCart };
@@ -163,17 +155,26 @@
 //           <h1 className="category-title">
 //             {category.charAt(0).toUpperCase() + category.slice(1)}
 //           </h1>
+//           <div className="search-container">
+//             <input
+//               type="text"
+//               placeholder="Search for products..."
+//               value={searchQuery}
+//               onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
+//               className="search-input"
+//             />
+//           </div>
 //           <div className="product-list">
 //             {products.map((product) => (
 //               <motion.div
 //                 className="product-card"
 //                 key={product._id}
-//                 initial={{ opacity: 0, y: 50 }}
-//                 animate={{ opacity: 1, y: 0 }}
+//                 initial={{ opacity: 0, y: 50, scale: 0.8 }}
+//                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
 //                 transition={{ duration: 0.3 }}
 //               >
 //                 <img
-//                   src={product.thumbnail.replace("http://", "https://")}
+//                   src={product.thumbnail}
 //                   alt={product.name}
 //                   className="product-image"
 //                 />
@@ -184,30 +185,26 @@
 //                       Shop name: <b>{cart[product._id]?.shop || product.defaultShop || "N/A"}</b>
 //                     </div>
 //                   )}
-
 //                   <p className="product-price">
-//                     {/* <span className="original-price">₹{product.price}</span> */}
-//                     <span className="original-price">₹{cart[product._id]?.price ||
-//                       product.defaultPrice ||
-//                       product.price}</span>
+//                     <span className="original-price">
+//                       ₹{cart[product._id]?.price || product.defaultPrice || product.price}
+//                     </span>
 //                     <span className="final-price">
-//                       ₹{cart[product._id]?.FinalPrice ||
-//                         product.defaultPrice ||
-//                         product.FinalPrice}
+//                       ₹{cart[product._id]?.FinalPrice || product.defaultFinalPrice || product.FinalPrice}
 //                     </span>
 //                   </p>
 //                   {product.minorderquantity && (
-//                     <p style={{ color: "red" }}>
+//                     <p style={{ color: "red" }} className="min_order_quantity_text" >
 //                       Min Order Quantity: {product.minorderquantity}
 //                     </p>
 //                   )}
 //                   {product.shopPrices?.length > 0 && (
 //                     <div className="shop-selection">
-//                       <span style={{ cursor: "pointer", color: "red", fontSize: "13px" }} >
-//                         <div>
-
-//                           change shop
-
+//                       <span style={{ cursor: "pointer", color: "red", fontSize: "17px" }}>
+//                         <div className="btn btn-danger">
+//                           change shop <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shop" viewBox="0 0 16 16">
+//                             <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z" />
+//                           </svg>
 //                         </div>
 //                       </span>
 //                       <select
@@ -220,13 +217,12 @@
 //                         className="product-actions-dropdown"
 //                       >
 //                         {product.shopPrices
-//                           .sort((a, b) => a.poistionId - b.poistionId) // Sort based on positionId
+//                           .sort((a, b) => a.poistionId - b.poistionId)
 //                           .map((shop) => (
 //                             <option key={shop._id} value={shop.shopname}>
 //                               {shop.shopname} - ₹{shop.FinalPrice}
 //                             </option>
 //                           ))}
-
 //                       </select>
 //                     </div>
 //                   )}
@@ -349,6 +345,7 @@ function CategoryPage() {
   const [loading, setLoading] = useState(false);
   const [cart, setCart] = useState({});
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (isInitialLoad) {
@@ -480,6 +477,11 @@ function CategoryPage() {
     });
   };
 
+  // Filter products based on search query
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <>
       {loading ? (
@@ -491,12 +493,21 @@ function CategoryPage() {
           <h1 className="category-title">
             {category.charAt(0).toUpperCase() + category.slice(1)}
           </h1>
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search for products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+            />
+          </div>
           <div className="product-list">
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <motion.div
                 className="product-card"
                 key={product._id}
-                initial={{ opacity: 0, y: 50 , scale: 0.8}}
+                initial={{ opacity: 0, y: 50, scale: 0.8 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.3 }}
               >
@@ -507,17 +518,11 @@ function CategoryPage() {
                 />
                 <div className="product-info">
                   <h2 className="product-name">{product.name}</h2>
-                  {/* <span style={{ cursor: "pointer", color: "red", fontSize: "15px" }}>
-                    <div>
-                      this is service is not Available at current time
-                    </div>
-                  </span> */}
                   {product.shopPrices?.length > 0 && (
                     <div>
                       Shop name: <b>{cart[product._id]?.shop || product.defaultShop || "N/A"}</b>
                     </div>
                   )}
-
                   <p className="product-price">
                     <span className="original-price">
                       ₹{cart[product._id]?.price || product.defaultPrice || product.price}
@@ -533,12 +538,11 @@ function CategoryPage() {
                   )}
                   {product.shopPrices?.length > 0 && (
                     <div className="shop-selection">
-                      <span  style={{ cursor: "pointer", color: "red", fontSize: "17px" }}>
+                      <span style={{ cursor: "pointer", color: "red", fontSize: "17px" }}>
                         <div className="btn btn-danger">
                           change shop <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shop" viewBox="0 0 16 16">
                             <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z" />
                           </svg>
-                          {/* this is service is not Available at current time  */}
                         </div>
                       </span>
                       <select
@@ -551,7 +555,7 @@ function CategoryPage() {
                         className="product-actions-dropdown"
                       >
                         {product.shopPrices
-                          .sort((a, b) => a.poistionId - b.poistionId) // Sort based on positionId
+                          .sort((a, b) => a.poistionId - b.poistionId)
                           .map((shop) => (
                             <option key={shop._id} value={shop.shopname}>
                               {shop.shopname} - ₹{shop.FinalPrice}
