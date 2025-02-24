@@ -48,7 +48,9 @@ function AllServicesPage() {
         const response = await makeApi("/api/get-all-categories", "GET");
   
         // Filter out categories with type 'shop'
-        const filteredCategories = response.data.filter(category => category.type !== 'shop');
+        // const filteredCategories = response.data.filter(category => category.type !== 'shop');
+        const filteredCategories = response.data.filter(category => category.type !== 'shop' && category.type !== 'repair');
+
   
         // Sort the remaining categories by positionId
         const sortedCategories = filteredCategories.sort((a, b) => a.poistionId - b.poistionId);
