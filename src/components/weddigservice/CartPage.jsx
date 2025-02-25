@@ -92,33 +92,33 @@ const CartPage = () => {
 
   const handleAddAddress = () => {
     // if (!mobileNumber || !userName || !address || !village) {
-    if (!mobileNumber ) {
+    if (!mobileNumber) {
       toast.error("please enter mobile number");
       return;
     }
-     if (!address) {
+    if (!address) {
       toast.error("please enter address");
       return;
     }
-     if (!userName) {
+    if (!userName) {
       toast.error("please enter name");
       return;
     }
-     if (!village) {
+    if (!village) {
       toast.error("please enter village (गाँव)");
       return;
     }
 
     if (mobileNumber.length === 10 && address.trim() && userName.trim()) {
       // Address is valid, save it
-      const updatedAddresses = [...addresses, { userName, mobileNumber, address,village }];
+      const updatedAddresses = [...addresses, { userName, mobileNumber, address, village }];
       setAddresses(updatedAddresses);
       localStorage.setItem("addresses", JSON.stringify(updatedAddresses));
-      setMobileNumber(""); 
-      setAddress(""); 
-      setUserName(""); 
+      setMobileNumber("");
+      setAddress("");
+      setUserName("");
       setVillage("");
-      setShowAddAddressPopup(false); 
+      setShowAddAddressPopup(false);
     } else {
       toast.error("Please enter a valid mobile number, address, and name.");
     }
@@ -134,11 +134,21 @@ const CartPage = () => {
     setSelectedAddress(selected);
   };
 
-  const totalCartValue = cart.reduce(
-    (total, item) => total + item.FinalPrice * item.quantity,
-    0
-  );
+  // const totalCartValue = cart.reduce(
+  //   (total, item) => total + item.FinalPrice * item.quantity,
+  //   0
+  // );
 
+  const totalCartValue = cart.reduce((total, item) => {
+    // Skip items with serviceType "Repair"
+    if (item.serviceType && item.serviceType === "Repair") {
+      return total; // Do not add FinalPrice for "Repair" items
+    }
+  
+    // Add FinalPrice * quantity for other items
+    return total + (item.FinalPrice || 0) * (item.quantity || 0);
+  }, 0);
+  
   // Function to handle order placement
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
@@ -170,9 +180,9 @@ const CartPage = () => {
     };
 
     const handleDeleteAddress = (index) => {
-      const updatedAddresses = addresses.filter((_, i) => i !== index); 
-      setAddresses(updatedAddresses); 
-      localStorage.setItem("addresses", JSON.stringify(updatedAddresses)); 
+      const updatedAddresses = addresses.filter((_, i) => i !== index);
+      setAddresses(updatedAddresses);
+      localStorage.setItem("addresses", JSON.stringify(updatedAddresses));
 
       // If the deleted address was selected, reset the selected address
       if (selectedAddress === addresses[index]) {
@@ -281,8 +291,20 @@ const CartPage = () => {
                 <h2 className="product-name">{product.name}</h2>
                 {product.shop && <p className="product-shop"><strong>Shop: </strong>{product.shop}</p>}
                 <p className="product-price">
-                  <span className="original-price">₹{product.price}</span>
-                  <span className="final-price">₹{product.FinalPrice}</span>
+                  {product.serviceType === "Repair" ? (
+                    <>
+                      <p> <b>Fees</b>: लोकेशन के हिसाब से </p>
+                    </>
+                  ) : (
+                    <>
+                      {/* {product.name} from <b>{product.shop}</b> x {product.quantity} = ₹ */}
+                      {product.name}  <b> {product?.shop && <>from {product?.shop}</>} </b> x {product.quantity} = ₹
+
+                      {product.FinalPrice * product.quantity}
+                    </>
+                  )}
+                  {/* <span className="original-price">₹{product.price}</span> */}
+                  {/* <span className="final-price">₹{product.FinalPrice}</span> */}
                 </p>
                 {product.minorderquantity && (
                   <p style={{ color: "red" }}>
@@ -311,7 +333,15 @@ const CartPage = () => {
                 transition={{ duration: 0.3 }}
                 className="cart-item-subtotal"
               >
-                Subtotal: ₹{product.FinalPrice * product.quantity}
+                {product.serviceType === "Repair" ? (
+                    <>
+                      <p>  </p>
+                    </>
+                  ) : (
+                    <>
+                     Subtotal: ₹{product.FinalPrice * product.quantity}
+                    </>
+                  )}
               </motion.p>
             </motion.div>
           ))
@@ -324,7 +354,7 @@ const CartPage = () => {
             <h2 className="section-title">Select Address</h2>
             {addresses.length > 0 ? (
               <div className="address-list">
-                
+
                 {addresses.map((address, index) => (
                   <div className="address-item" key={index}>
                     <input
@@ -456,7 +486,17 @@ const CartPage = () => {
                 <div className="order-item-info">
                   <span className="order-item-quantity">Quantity: {product.quantity}</span>
                   <span className="order-item-name">{product.name}</span>
+                  {product.serviceType === "Repair" ? (
+                    <>
+                      <p>  </p>
+                    </>
+                  ) : (
+                    <>
+                     {/* Subtotal: ₹{product.FinalPrice * product.quantity} */}
                   <span className="order-item-price">₹{product.SingelProductPrice * product.quantity}</span>
+
+                    </>
+                  )}
                 </div>
               </li>
             ))}

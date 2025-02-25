@@ -122,7 +122,7 @@ function FooterBar() {
       </NavLink>
 
 
-      {/* <NavLink
+      <NavLink
         to="/repair"
         className="footer-link"
         activeClassName="active"
@@ -144,7 +144,7 @@ function FooterBar() {
         >
           Repair
         </motion.span>
-      </NavLink> */}
+      </NavLink>
     </div>
   );
 }

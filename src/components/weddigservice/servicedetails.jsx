@@ -633,8 +633,16 @@ function CategoryPage() {
                       exit={{ opacity: 0, y: 10 }}
                       transition={{ duration: 0.8 }}
                     >
-                      {item.name} from <b>{item.shop}</b> x {item.quantity} = ₹
-                      {item.FinalPrice * item.quantity}
+                      {item.serviceType === "Repair" ? (
+                        <>
+                          {item.name}
+                        </>
+                      ) : (
+                        <>
+                          {item.name}  <b> {item?.shop && <>from {item?.shop}</>} </b> x {item.quantity} = ₹
+                          {item.FinalPrice * item.quantity}
+                        </>
+                      )}
                       <motion.button
                         className="remove-btn-mini"
                         whileTap={{ scale: 0.9 }}

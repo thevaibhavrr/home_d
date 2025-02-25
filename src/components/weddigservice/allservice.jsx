@@ -46,15 +46,15 @@ function AllServicesPage() {
       setLoading(true);
       try {
         const response = await makeApi("/api/get-all-categories", "GET");
-  
+
         // Filter out categories with type 'shop'
         // const filteredCategories = response.data.filter(category => category.type !== 'shop');
         const filteredCategories = response.data.filter(category => category.type !== 'shop' && category.type !== 'repair');
 
-  
+
         // Sort the remaining categories by positionId
         const sortedCategories = filteredCategories.sort((a, b) => a.poistionId - b.poistionId);
-  
+
         setCategories(sortedCategories);
         setFilteredCategories(sortedCategories); // Initially display all categories
       } catch (error) {
@@ -63,10 +63,10 @@ function AllServicesPage() {
         setLoading(false);
       }
     }
-  
+
     fetchCategories();
   }, []);
-  
+
   useEffect(() => {
     async function fetchCategories() {
       setLoading(true);
@@ -492,31 +492,31 @@ function AllServicesPage() {
         </div>
       ) : (
         <>
-        <div className="services-container">
-          {filteredCategories.map((service) => (
-            <motion.div
-              className="service-card"
-              key={service._id}
-              initial={{ scale: 0.8, y: 100, opecity: 0 }}
-              whileInView={{ scale: 1, y: 0, opecity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Link
-                to={`/category/${service.name.toLowerCase()}`}
-                className="service-link"
+          <div className="services-container">
+            {filteredCategories.map((service) => (
+              <motion.div
+                className="service-card"
+                key={service._id}
+                initial={{ scale: 0.8, y: 100, opecity: 0 }}
+                whileInView={{ scale: 1, y: 0, opecity: 1 }}
+                transition={{ duration: 0.3 }}
               >
-                <img
-                  src={service.image}
-                  alt={service.name}
-                  className="service-image"
-                />
-                <div className="service-details">
-                  <h2 className="service-title">{service.name}</h2>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+                <Link
+                  to={`/category/${service.name.toLowerCase()}`}
+                  className="service-link"
+                >
+                  <img
+                    src={service.image}
+                    alt={service.name}
+                    className="service-image"
+                  />
+                  <div className="service-details">
+                    <h2 className="service-title">{service.name}</h2>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
 
         </>
       )}
@@ -550,8 +550,18 @@ function AllServicesPage() {
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.8 }}
                 >
-                  {item.name} from <b>{item.shop}</b> x {item.quantity} = ₹
-                  {item.FinalPrice * item.quantity}
+                  {item.serviceType === "Repair" ? (
+                    <>
+                      {item.name}
+                    </>
+                  ) : (
+                    <>
+                      {/* {item.name} from <b>{item.shop}</b> x {item.quantity} = ₹ */}
+                      {item.name}  <b> {item?.shop && <>from {item?.shop}</>} </b> x {item.quantity} = ₹
+
+                      {item.FinalPrice * item.quantity}
+                    </>
+                  )}
                   <motion.button
                     className="remove-btn-mini"
                     whileTap={{ scale: 0.9 }}
@@ -578,7 +588,7 @@ function AllServicesPage() {
           </motion.div>
         )}
       </AnimatePresence>
-      <FooterBar/>
+      <FooterBar />
       <div style={{ height: "60vh" }} ></div>
 
     </div>
